@@ -4,7 +4,6 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SERVER_NAME = 'localhost:8888'
 
 
 class ProductionConfig(Config):
