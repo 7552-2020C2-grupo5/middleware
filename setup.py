@@ -9,5 +9,5 @@ setup(
 
     packages=find_packages(),
 
-    install_requires=['flask-restplus==0.13.0'],
+    install_requires=['flask-restx'],
 )

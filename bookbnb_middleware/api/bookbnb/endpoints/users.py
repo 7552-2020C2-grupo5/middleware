@@ -1,7 +1,7 @@
 import logging
 
 from flask import request
-from flask_restplus import Resource
+from flask_restx import Resource
 from bookbnb_middleware.api.bookbnb.business import create_user, update_user, delete_user
 from bookbnb_middleware.api.bookbnb.serializers import user_post
 from bookbnb_middleware.api.bookbnb.parsers import user_post_arguments

@@ -1,6 +1,6 @@
 import logging
 
-from flask_restplus import Api
+from flask_restx import Api
 from bookbnb_middleware import settings
 
 log = logging.getLogger(__name__)

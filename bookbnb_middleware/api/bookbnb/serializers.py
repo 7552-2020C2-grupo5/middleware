@@ -1,4 +1,4 @@
-from flask_restplus import fields
+from flask_restx import fields
 from bookbnb_middleware.api.api import api
 
 user_post = api.model('User post', {

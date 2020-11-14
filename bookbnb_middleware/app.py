@@ -3,8 +3,7 @@ import logging.config
 import os
 from flask import Flask, Blueprint
 from bookbnb_middleware import settings
-from bookbnb_middleware.api.bookbnb.endpoints.users import ns as blog_posts_namespace
-from bookbnb_middleware.api.bookbnb.endpoints.publications import ns as blog_categories_namespace
+from bookbnb_middleware.api.bookbnb.endpoints.users import ns as bookbnb_users_namespace
 from bookbnb_middleware.api.api import api
 
 app = Flask(__name__)
@@ -15,10 +14,10 @@ log = logging.getLogger(__name__)
 
 def configure_app(flask_app):
     flask_app.config['SERVER_NAME'] = settings.FLASK_SERVER_NAME
-    flask_app.config['SWAGGER_UI_DOC_EXPANSION'] = settings.RESTPLUS_SWAGGER_UI_DOC_EXPANSION
-    flask_app.config['RESTPLUS_VALIDATE'] = settings.RESTPLUS_VALIDATE
-    flask_app.config['RESTPLUS_MASK_SWAGGER'] = settings.RESTPLUS_MASK_SWAGGER
-    flask_app.config['ERROR_404_HELP'] = settings.RESTPLUS_ERROR_404_HELP
+    flask_app.config['SWAGGER_UI_DOC_EXPANSION'] = settings.RESTX_SWAGGER_UI_DOC_EXPANSION
+    flask_app.config['RESTX_VALIDATE'] = settings.RESTX_VALIDATE
+    flask_app.config['RESTX_MASK_SWAGGER'] = settings.RESTX_MASK_SWAGGER
+    flask_app.config['ERROR_404_HELP'] = settings.RESTX_ERROR_404_HELP
 
 
 def initialize_app(flask_app):
@@ -26,8 +25,7 @@ def initialize_app(flask_app):
 
     blueprint = Blueprint('api', __name__, url_prefix='/api')
     api.init_app(blueprint)
-    api.add_namespace(blog_posts_namespace)
-    api.add_namespace(blog_categories_namespace)
+    api.add_namespace(bookbnb_users_namespace)
     flask_app.register_blueprint(blueprint)
 
 
