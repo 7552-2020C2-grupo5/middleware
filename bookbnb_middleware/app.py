@@ -3,6 +3,8 @@ import logging.config
 import os
 from decouple import config as config_decouple
 from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 from bookbnb_middleware import settings
 from bookbnb_middleware.settings import config
 from bookbnb_middleware.api.bookbnb.endpoints.users import ns as bookbnb_users_namespace
@@ -12,9 +14,6 @@ environment = config['development']
 if config_decouple('PRODUCTION', default=False):
     environment = config['production']
 
-
-app = Flask(__name__)
-app.config.from_object(environment)
 logging_conf_path = os.path.normpath(
     os.path.join(os.path.dirname(__file__), '../logging.conf')
 )
@@ -23,6 +22,7 @@ log = logging.getLogger(__name__)
 
 
 def configure_app(flask_app):
+    flask_app.config.from_object(environment)
     flask_app.config[
         'SWAGGER_UI_DOC_EXPANSION'
     ] = settings.RESTX_SWAGGER_UI_DOC_EXPANSION
@@ -33,14 +33,15 @@ def configure_app(flask_app):
 
 def initialize_app(flask_app):
     configure_app(flask_app)
-    api.init_app(app)
+    api.init_app(flask_app)
     api.add_namespace(bookbnb_users_namespace)
+    flask_app.wsgi_app = ProxyFix(
+        flask_app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1
+    )
 
 
-def main():
+def create_app():
+    """creates a new app instance"""
+    app = Flask(__name__)
     initialize_app(app)
-    app.run(threaded=True, port=5000)
-
-
-if __name__ == "__main__":
-    main()
+    return app

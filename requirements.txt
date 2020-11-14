@@ -3,5 +3,6 @@ flake8==3.8.4
 Flask==1.1.2
 flask-restplus==0.13.0
 flask-restx==0.2.0
+flask-script
 gunicorn==20.0.4
 python-decouple
