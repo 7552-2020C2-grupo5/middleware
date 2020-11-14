@@ -2,7 +2,7 @@ import logging.config
 
 import os
 from decouple import config as config_decouple
-from flask import Flask, Blueprint
+from flask import Flask
 from bookbnb_middleware import settings
 from bookbnb_middleware.settings import config
 from bookbnb_middleware.api.bookbnb.endpoints.users import ns as bookbnb_users_namespace
@@ -33,11 +33,8 @@ def configure_app(flask_app):
 
 def initialize_app(flask_app):
     configure_app(flask_app)
-
-    blueprint = Blueprint('api', __name__, url_prefix='/api')
-    api.init_app(blueprint)
+    api.init_app(app)
     api.add_namespace(bookbnb_users_namespace)
-    flask_app.register_blueprint(blueprint)
 
 
 def main():
