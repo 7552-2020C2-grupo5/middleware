@@ -42,7 +42,7 @@ def initialize_app(flask_app):
 
 def main():
     initialize_app(app)
-    app.run()
+    app.run(threaded=True, port=5000)
 
 
 if __name__ == "__main__":
