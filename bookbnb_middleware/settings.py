@@ -4,6 +4,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    SERVER_NAME = 'localhost:8888'
 
 
 class ProductionConfig(Config):
@@ -11,10 +12,6 @@ class ProductionConfig(Config):
 
 
 config = {'development': DevelopmentConfig, 'production': ProductionConfig}
-
-
-# Flask settings for development deploy
-FLASK_SERVER_NAME = 'localhost:8888'
 
 # Flask-Restplus settings
 RESTX_SWAGGER_UI_DOC_EXPANSION = 'list'

@@ -23,7 +23,6 @@ log = logging.getLogger(__name__)
 
 
 def configure_app(flask_app):
-    flask_app.config['SERVER_NAME'] = settings.FLASK_SERVER_NAME
     flask_app.config[
         'SWAGGER_UI_DOC_EXPANSION'
     ] = settings.RESTX_SWAGGER_UI_DOC_EXPANSION
