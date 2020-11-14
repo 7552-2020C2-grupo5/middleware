@@ -1,6 +1,20 @@
-# Flask settings
+class Config:
+    pass
+
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+
+
+class ProductionConfig(Config):
+    DEBUG = False
+
+
+config = {'development': DevelopmentConfig, 'production': ProductionConfig}
+
+
+# Flask settings for development deploy
 FLASK_SERVER_NAME = 'localhost:8888'
-FLASK_DEBUG = True  # Do not use debug mode in production
 
 # Flask-Restplus settings
 RESTX_SWAGGER_UI_DOC_EXPANSION = 'list'
