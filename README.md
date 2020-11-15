@@ -1,11 +1,15 @@
 # middleware
 
+### Heroku deploy
+
+- heroku login
+- git remote add heroku https://git.heroku.com/middlewarebookbnb.git
+- git push heroku master
+
 ### Local deploy
 
-- pip install -r requirements
-- python setup.py develop
-- python bookbnb_middleware/app.py
-- try http://localhost:8888/api/ to see swagger documentation
+- `pip install -r requirements`
+- `gunicorn -w 2 --bind 0.0.0.0:$PORT "bookbnb_middleware.app:create_app()"`
 
 ### Commits
 
