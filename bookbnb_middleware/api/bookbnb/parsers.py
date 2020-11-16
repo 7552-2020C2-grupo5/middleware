@@ -1,10 +1,11 @@
-from flask_restx import reqparse
+from flask_restx import fields
+from bookbnb_middleware.api.api import api
 
-user_post_arguments = reqparse.RequestParser()
-user_post_arguments.add_argument(
-    'name', type=str, required=True, help='user first name'
+user_post_parser = api.model(
+    'User post',
+    {
+        'first_name': fields.String(required=True, description='User name'),
+        'last_name': fields.String(required=True, description='User last name'),
+        'email': fields.String(required=True, description='User mail'),
+    },
 )
-user_post_arguments.add_argument(
-    'last_name', type=str, required=True, help='user last name'
-)
-user_post_arguments.add_argument('mail', type=str, required=True, help='user mail')
