@@ -9,7 +9,7 @@
 ### Local deploy
 
 - `pip install -r requirements`
-- `gunicorn -w 2 --bind 0.0.0.0:$PORT "bookbnb_middleware.app:create_app()"`
+- `gunicorn -w 2 --bind 0.0.0.0:<puerto> "bookbnb_middleware.app:create_app()"`
 
 ### Commits
 
