@@ -7,7 +7,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from bookbnb_middleware import settings
 from bookbnb_middleware.settings import config
-from bookbnb_middleware.api.bookbnb.endpoints.users import ns as bookbnb_users_namespace
+from bookbnb_middleware.api.bookbnb.endpoints.user import ns as bookbnb_users_namespace
 from bookbnb_middleware.api.api import api
 
 environment = config['development']
