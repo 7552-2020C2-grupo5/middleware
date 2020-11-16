@@ -1,4 +1,4 @@
-# middleware
+# BookBNB Middleware API 
 
 ### Heroku deploy
 
