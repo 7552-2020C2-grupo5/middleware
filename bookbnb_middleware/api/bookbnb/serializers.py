@@ -1,7 +1,7 @@
 from flask_restx import fields
 from bookbnb_middleware.api.api import api
 
-user_get_serializer = api.model(
+user_get_model = api.model(
     "User get",
     {
         "id": fields.Integer(description="The user unique identifier"),
