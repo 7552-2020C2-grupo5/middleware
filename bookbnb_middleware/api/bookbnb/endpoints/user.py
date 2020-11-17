@@ -8,19 +8,19 @@ from bookbnb_middleware.api.bookbnb.user_handlers import (
     get_user,
 )
 from bookbnb_middleware.api.bookbnb.parsers import user_post_parser
-from bookbnb_middleware.api.bookbnb.serializers import user_get_model
+from bookbnb_middleware.api.bookbnb.serializers import user_get_serializer
 from bookbnb_middleware.api.api import api
 from bookbnb_middleware.constants import SUCCESS_MSG
 
 log = logging.getLogger(__name__)
 
-ns = api.namespace('bookbnb/user', description='Operations related to bookbnb users')
+ns = api.namespace("bookbnb/user", description="Operations related to bookbnb users")
 
 
-@ns.route('/')
+@ns.route("/")
 class User(Resource):
     @api.expect(user_post_parser)
-    @api.doc('create_user', responses={201: SUCCESS_MSG})
+    @api.doc("create_user", responses={201: SUCCESS_MSG})
     def post(self):
         """
         Creates a new user.
@@ -28,8 +28,8 @@ class User(Resource):
         create_user(request.json)
         return None, 201
 
-    @api.doc('list_users')
-    @api.marshal_list_with(user_get_model)
+    @api.doc("list_users")
+    @api.marshal_list_with(user_get_serializer)
     def get(self):
         """
         List all users.
@@ -38,12 +38,12 @@ class User(Resource):
         return res, 200
 
 
-@ns.route('/<int:user_id>')
-@api.param('user_id', 'The user unique identifier')
+@ns.route("/<int:user_id>")
+@api.param("user_id", "The user unique identifier")
 @api.response(200, SUCCESS_MSG)
-class UserResource(Resource):
-    @api.doc('get_user_by_id')
-    @api.marshal_with(user_get_model)
+class UserById(Resource):
+    @api.doc("get_user_by_id")
+    @api.marshal_with(user_get_serializer)
     def get(self, user_id):
         """
         Get a user by id.
