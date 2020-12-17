@@ -9,12 +9,12 @@ login_model = api.model(
     },
 )
 
-user_logged_model = api.model(
+logged_model = api.model(
     "User logged model", {"token": fields.String(description="The user session token")}
 )
 
-logout_model = reqparse.RequestParser()
-logout_model.add_argument(
+auth_model = reqparse.RequestParser()
+auth_model.add_argument(
     'Authorization', type=str, location='headers', help="Access token", required=True
 )
 

@@ -2,26 +2,26 @@ import logging
 
 from flask import request
 from flask_restx import Resource
-from bookbnb_middleware.api.users_handlers import (
-    login_user,
-    logout_user,
-    register_user,
+from bookbnb_middleware.api.handlers.users_handlers import (
+    login,
+    logout,
+    register,
     list_users,
     get_user,
+    validate_token,
 )
-from bookbnb_middleware.api.users_models import (
+from bookbnb_middleware.api.models.users_models import (
     register_model,
     registered_model,
     login_model,
-    user_logged_model,
+    logged_model,
     error_model,
     profile_model,
-    logout_model,
+    auth_model,
     logged_out_model,
 )
 
 from bookbnb_middleware.api.api import api
-from bookbnb_middleware.constants import SUCCESS_MSG
 
 log = logging.getLogger(__name__)
 
@@ -31,27 +31,29 @@ ns = api.namespace("bookbnb/users", description="Operations related to bookbnb u
 @ns.route("/login")
 class Login(Resource):
     @api.expect(login_model)
-    @ns.response(code=201, model=user_logged_model, description='Success')
+    @ns.response(code=201, model=logged_model, description='Success')
     @ns.response(code=401, model=error_model, description='Invalid credentials')
     @ns.response(code=404, model=error_model, description='User does not exist')
     def post(self):
         """
         Logins user
         """
-        res, status_code = login_user(request.json)
+        res, status_code = login(request.json)
         return res, status_code
 
 
 @ns.route("/logout")
 class Logout(Resource):
-    @api.expect(logout_model)
+    @api.expect(auth_model)
     @ns.response(code=201, model=logged_out_model, description='Success')
     @ns.response(code=401, model=error_model, description='Token invalid or malformed')
     def post(self):
         """
         Logouts user
         """
-        res, status_code = logout_user(request.headers)
+        parser_args = auth_model.parse_args()
+        auth_token = parser_args.Authorization
+        res, status_code = logout(auth_token)
         return res, status_code
 
 
@@ -64,7 +66,7 @@ class User(Resource):
         """
         Creates a new user.
         """
-        res, status_code = register_user(request.json)
+        res, status_code = register(request.json)
         return res, status_code
 
     @api.marshal_list_with(profile_model)
@@ -76,9 +78,22 @@ class User(Resource):
         return res, status_code
 
 
+@ns.route('/validate_token')
+class UserTokenValidatorResource(Resource):
+    @api.expect(auth_model)
+    @api.response(code=200, description="Success")
+    @api.response(code=401, model=error_model, description="Invalid token")
+    @api.response(code=400, model=error_model, description="Malformed token")
+    def get(self):
+        parser_args = auth_model.parse_args()
+        auth_token = parser_args.Authorization
+        res, status_code = validate_token(auth_token)
+        return res, status_code
+
+
 @ns.route("/<int:user_id>")
 @api.param("user_id", "The user unique identifier")
-@api.response(200, SUCCESS_MSG)
+@api.response(200, "Success")
 class UserById(Resource):
     @api.doc("get_user_by_id")
     @api.marshal_with(profile_model)
