@@ -4,19 +4,21 @@ from flask import request
 from flask_restx import Resource
 from bookbnb_middleware.api.bookbnb.users_handlers import (
     login_user,
+    logout_user,
     create_user,
     list_users,
     get_user,
 )
-from bookbnb_middleware.api.bookbnb.parsers import (
+from bookbnb_middleware.api.bookbnb.users_models import (
     user_post_parser,
     user_login_model,
-)
-from bookbnb_middleware.api.bookbnb.serializers import (
     user_get_serializer,
     user_logged_model,
     user_error_model,
+    user_logout_model,
+    user_logged_out_model,
 )
+
 from bookbnb_middleware.api.api import api
 from bookbnb_middleware.constants import SUCCESS_MSG
 
@@ -36,6 +38,21 @@ class Login(Resource):
         Logins user
         """
         res, status_code = login_user(request.json)
+        return res, status_code
+
+
+@ns.route("/logout")
+class Logout(Resource):
+    @api.expect(user_logout_model)
+    @ns.response(code=201, model=user_logged_out_model, description='Success')
+    @ns.response(
+        code=401, model=user_error_model, description='Token invalid or malformed'
+    )
+    def post(self):
+        """
+        Logouts user
+        """
+        res, status_code = logout_user(request.headers)
         return res, status_code
 
 

@@ -7,11 +7,12 @@ from bookbnb_middleware.api.bookbnb.publications_handlers import (
     list_publications,
     get_publication,
 )
-from bookbnb_middleware.api.bookbnb.parsers import (
+from bookbnb_middleware.api.bookbnb.publications_models import (
     publication_post_parser,
     publication_get_parser,
+    publication_get_serializer,
 )
-from bookbnb_middleware.api.bookbnb.serializers import publication_get_serializer
+
 from bookbnb_middleware.api.api import api
 from bookbnb_middleware.constants import SUCCESS_MSG
 
