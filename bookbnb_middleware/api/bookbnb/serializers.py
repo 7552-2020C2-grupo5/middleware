@@ -1,6 +1,15 @@
 from flask_restx import fields
 from bookbnb_middleware.api.api import api
 
+user_logged_model = api.model(
+    "User logged model", {"token": fields.String(description="The user session token")}
+)
+
+user_error_model = api.model(
+    "User error model",
+    {"message": fields.String(description="A message describing the error")},
+)
+
 user_get_serializer = api.model(
     "User get serialization",
     {

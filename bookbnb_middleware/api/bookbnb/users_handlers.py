@@ -1,8 +1,13 @@
 import requests
 import json
-from bookbnb_middleware.constants import USER_URL
+from bookbnb_middleware.constants import LOGIN_URL, USER_URL
 
 headers = {"content-type": "application/json"}
+
+
+def login_user(payload):
+    r = requests.post(LOGIN_URL, data=json.dumps(payload), headers=headers)
+    return r.json(), r.status_code
 
 
 def create_user(payload):

@@ -5,7 +5,7 @@ from flask_restx import Api
 log = logging.getLogger(__name__)
 
 api = Api(
-    version="1.0",
+    version="1.0.1",
     title="BookBNB Middleware API",
     description="BookBNB Middleware API for integrating backend microservices",
 )

@@ -1,6 +1,14 @@
 from flask_restx import fields, reqparse
 from bookbnb_middleware.api.api import api
 
+user_login_model = api.model(
+    "User login model",
+    {
+        "email": fields.String(required=True, description="Account email"),
+        "password": fields.String(required=True, description="Account password"),
+    },
+)
+
 user_post_parser = api.model(
     "User post parser",
     {
