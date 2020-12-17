@@ -2,12 +2,12 @@ import logging
 
 from flask import request
 from flask_restx import Resource
-from bookbnb_middleware.api.bookbnb.publications_handlers import (
+from bookbnb_middleware.api.publications_handlers import (
     create_publication,
     list_publications,
     get_publication,
 )
-from bookbnb_middleware.api.bookbnb.publications_models import (
+from bookbnb_middleware.api.publications_models import (
     publication_post_parser,
     publication_get_parser,
     publication_get_serializer,
@@ -19,7 +19,7 @@ from bookbnb_middleware.constants import SUCCESS_MSG
 log = logging.getLogger(__name__)
 
 ns = api.namespace(
-    "bookbnb/publication", description="Operations related to bookbnb publications"
+    "bookbnb/publications", description="Operations related to bookbnb publications"
 )
 
 

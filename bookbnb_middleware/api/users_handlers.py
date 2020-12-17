@@ -1,6 +1,6 @@
 import requests
 import json
-from bookbnb_middleware.constants import LOGIN_URL, USER_URL, LOGOUT_URL
+from bookbnb_middleware.constants import LOGIN_URL, USERS_URL, LOGOUT_URL
 
 headers = {"content-type": "application/json"}
 
@@ -17,17 +17,17 @@ def logout_user(auth_header):
     return r.json(), r.status_code
 
 
-def create_user(payload):
-    # todo validate errors
-    requests.post(USER_URL, data=json.dumps(payload), headers=headers)
+def register_user(payload):
+    r = requests.post(USERS_URL, data=json.dumps(payload), headers=headers)
+    return r.json(), r.status_code
 
 
 def list_users():
-    r = requests.get(USER_URL)
-    return r.json()
+    r = requests.get(USERS_URL)
+    return r.json(), r.status_code
 
 
 def get_user(user_id):
-    url = USER_URL + "/" + str(user_id)
+    url = USERS_URL + "/" + str(user_id)
     r = requests.get(url)
     return r.json()

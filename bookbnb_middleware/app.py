@@ -7,8 +7,8 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from bookbnb_middleware import settings
 from bookbnb_middleware.settings import config
-from bookbnb_middleware.api.bookbnb.endpoints.users import ns as bookbnb_users_namespace
-from bookbnb_middleware.api.bookbnb.endpoints.publications import (
+from bookbnb_middleware.api.endpoints.users import ns as bookbnb_users_namespace
+from bookbnb_middleware.api.endpoints.publications import (
     ns as bookbnb_publications_namespace,
 )
 from bookbnb_middleware.api.api import api
