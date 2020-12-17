@@ -1,6 +1,7 @@
 from flask_restx import fields, reqparse, Model
 from bookbnb_middleware.api.api import api
 
+
 login_model = api.model(
     "User login model",
     {
@@ -9,14 +10,17 @@ login_model = api.model(
     },
 )
 
+
 logged_model = api.model(
     "User logged model", {"token": fields.String(description="The user session token")}
 )
+
 
 auth_model = reqparse.RequestParser()
 auth_model.add_argument(
     'Authorization', type=str, location='headers', help="Access token", required=True
 )
+
 
 logged_out_model = api.model(
     "User logged out model",
@@ -26,10 +30,12 @@ logged_out_model = api.model(
     },
 )
 
+
 error_model = api.model(
     "User error model",
     {"message": fields.String(description="A message describing the error")},
 )
+
 
 base_user_model = Model(
     "User base model",
@@ -43,6 +49,7 @@ base_user_model = Model(
         "email": fields.String(required=True, description='The user email'),
     },
 )
+
 
 profile_model = base_user_model.clone(
     "User profile model",
@@ -71,3 +78,16 @@ registered_model = profile_model.clone(
     },
 )
 api.models[registered_model.name] = registered_model
+
+
+edit_model = api.model(
+    "User edit model",
+    {
+        "first_name": fields.String(required=False, description='The user first name'),
+        "last_name": fields.String(required=False, description='The user last name'),
+        "profile_picture": fields.String(
+            required=False, description="URL pointing to the user's profile picture"
+        ),
+        "email": fields.String(required=False, description='The user email'),
+    },
+)

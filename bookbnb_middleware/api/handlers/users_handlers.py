@@ -39,7 +39,13 @@ def validate_token(auth_token):
     return r.json(), r.status_code
 
 
-def get_user(user_id):
+def get_user_profile(user_id):
     url = USERS_URL + "/" + str(user_id)
     r = requests.get(url)
-    return r.json()
+    return r.json(), r.status_code
+
+
+def edit_user_profile(user_id, payload):
+    url = USERS_URL + "/" + str(user_id)
+    r = requests.put(url, data=json.dumps(payload), headers=headers)
+    return r.json(), r.status_code

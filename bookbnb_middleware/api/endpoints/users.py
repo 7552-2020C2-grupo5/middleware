@@ -7,7 +7,8 @@ from bookbnb_middleware.api.handlers.users_handlers import (
     logout,
     register,
     list_users,
-    get_user,
+    get_user_profile,
+    edit_user_profile,
     validate_token,
 )
 from bookbnb_middleware.api.models.users_models import (
@@ -19,6 +20,7 @@ from bookbnb_middleware.api.models.users_models import (
     profile_model,
     auth_model,
     logged_out_model,
+    edit_model,
 )
 
 from bookbnb_middleware.api.api import api
@@ -93,13 +95,20 @@ class UserTokenValidatorResource(Resource):
 
 @ns.route("/<int:user_id>")
 @api.param("user_id", "The user unique identifier")
-@api.response(200, "Success")
+@api.response(code=200, model=profile_model, description="Success")
+@api.response(code=404, model=error_model, description="User not found")
 class UserById(Resource):
-    @api.doc("get_user_by_id")
-    @api.marshal_with(profile_model)
     def get(self, user_id):
         """
         Get a user by id.
         """
-        res, status_code = get_user(user_id)
+        res, status_code = get_user_profile(user_id)
+        return res, status_code
+
+    @api.expect(edit_model)
+    def put(self, user_id):
+        """
+        Replace a user by id.
+        """
+        res, status_code = edit_user_profile(user_id, request.json)
         return res, status_code
