@@ -6,11 +6,13 @@ from bookbnb_middleware.api.handlers.publications_handlers import (
     create_publication,
     list_publications,
     get_publication,
+    replace_publication,
 )
 from bookbnb_middleware.api.models.publications_models import (
-    publication_post_parser,
-    publication_get_parser,
-    publication_get_serializer,
+    publication_model,
+    filter_model,
+    new_publication_model,
+    error_model,
 )
 
 from bookbnb_middleware.api.api import api
@@ -23,36 +25,46 @@ ns = api.namespace(
 
 
 @ns.route("/")
-class Publication(Resource):
-    @api.expect(publication_post_parser, validate=True)
-    @api.doc("create_publication", responses={201: "Success"})
+class PublicationsResource(Resource):
+    @api.expect(new_publication_model)
+    @api.marshal_with(publication_model)
+    @api.doc("create_publication", responses={200: "Success"})
     def post(self):
         """
         Creates a new publication.
         """
-        create_publication(request.json)
-        return None, 201
+        res, status_code = create_publication(request.json)
+        return res, status_code
 
-    @api.doc("list_publications", responses={200: "Success"})
-    @api.expect(publication_get_parser, validate=True)
-    @api.marshal_list_with(publication_get_serializer)
+    @api.response(code=200, model=publication_model, description="Success")
+    @api.response(code=400, model=error_model, description="Bad request")
+    @api.expect(filter_model)
     def get(self):
         """
         List all publications.
         """
-        res = list_publications(publication_get_parser.parse_args())
-        return res, 200
+        res, status_code = list_publications(filter_model.parse_args())
+        return res, status_code
 
 
 @ns.route("/<int:publication_id>")
 @api.param("publication_id", "The publication unique identifier")
-@api.response(200, "Success")
-class PublicationById(Resource):
-    @api.doc("get_publication_by_id")
-    @api.marshal_with(publication_get_serializer)
+class PublicationResource(Resource):
+    @api.response(code=200, model=publication_model, description="Success")
+    @api.response(code=404, model=error_model, description="Publication not found")
     def get(self, publication_id):
         """
         Get a publication by id.
         """
-        res = get_publication(publication_id)
-        return res, 200
+        res, status_code = get_publication(publication_id)
+        return res, status_code
+
+    @api.response(200, model=publication_model, description="Success")
+    @api.response(404, model=error_model, description='Publication not found')
+    @api.expect(new_publication_model)
+    def put(self, publication_id):
+        """
+        Replace a publication by id.
+        """
+        res, status_code = replace_publication(publication_id, request.json)
+        return res, status_code

@@ -10,17 +10,14 @@ login_model = api.model(
     },
 )
 
-
 logged_model = api.model(
     "User logged model", {"token": fields.String(description="The user session token")}
 )
-
 
 auth_model = reqparse.RequestParser()
 auth_model.add_argument(
     'Authorization', type=str, location='headers', help="Access token", required=True
 )
-
 
 logged_out_model = api.model(
     "User logged out model",
@@ -30,12 +27,10 @@ logged_out_model = api.model(
     },
 )
 
-
 error_model = api.model(
     "User error model",
     {"message": fields.String(description="A message describing the error")},
 )
-
 
 base_user_model = Model(
     "User base model",
@@ -50,13 +45,11 @@ base_user_model = Model(
     },
 )
 
-
 profile_model = base_user_model.clone(
     "User profile model",
     {"register_date": fields.DateTime(description='The date the user joined bookbnb')},
 )
 api.models[profile_model.name] = profile_model
-
 
 register_model = base_user_model.clone(
     "User register model",
@@ -68,7 +61,6 @@ register_model = base_user_model.clone(
 )
 api.models[register_model.name] = register_model
 
-
 registered_model = profile_model.clone(
     "Registered user model",
     {
@@ -78,7 +70,6 @@ registered_model = profile_model.clone(
     },
 )
 api.models[registered_model.name] = registered_model
-
 
 edit_model = api.model(
     "User edit model",

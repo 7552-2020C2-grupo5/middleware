@@ -1,6 +1,6 @@
 import logging.config
-
 import os
+
 from decouple import config as config_decouple
 from flask import Flask
 from werkzeug.middleware.proxy_fix import ProxyFix
