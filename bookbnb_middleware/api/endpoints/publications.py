@@ -20,7 +20,9 @@ from bookbnb_middleware.api.api import api
 log = logging.getLogger(__name__)
 
 ns = api.namespace(
-    "bookbnb/publications", description="Operations related to bookbnb publications"
+    name="Publications",
+    path="/bookbnb/publications",
+    description="Operations related to bookbnb publications",
 )
 
 

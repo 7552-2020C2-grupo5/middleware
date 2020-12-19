@@ -33,3 +33,8 @@ reply_model = api.model(
     "Publication reply model",
     {"reply": fields.String(description="The reply to the question", required=True)},
 )
+
+error_model = api.model(
+    "Publications error model",
+    {"message": fields.String(description="A message describing the error")},
+)

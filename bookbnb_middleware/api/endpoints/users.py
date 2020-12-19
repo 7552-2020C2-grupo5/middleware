@@ -27,7 +27,11 @@ from bookbnb_middleware.api.api import api
 
 log = logging.getLogger(__name__)
 
-ns = api.namespace("bookbnb/users", description="Operations related to bookbnb users")
+ns = api.namespace(
+    name="Users",
+    path="/bookbnb/users",
+    description="Operations related to bookbnb users",
+)
 
 
 @ns.route("/login")
