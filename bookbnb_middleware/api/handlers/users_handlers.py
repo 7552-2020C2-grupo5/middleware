@@ -5,6 +5,7 @@ from bookbnb_middleware.constants import (
     USERS_URL,
     LOGOUT_URL,
     TOKEN_VALIDATOR_URL,
+    PAYMENTS_URL,
 )
 
 headers = {"content-type": "application/json"}
@@ -23,6 +24,14 @@ def logout(auth_token):
 
 
 def register(payload):
+    wallet_req = requests.post(PAYMENTS_URL + '/identity')
+    if wallet_req.status_code != 200:
+        return None, 503
+
+    wallet_info = wallet_req.json()
+    payload["wallet_address"] = wallet_info["address"]
+    payload["wallet_mnemonic"] = wallet_info["mnemonic"]
+
     r = requests.post(USERS_URL, data=json.dumps(payload), headers=headers)
     return r.json(), r.status_code
 

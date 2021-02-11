@@ -68,6 +68,7 @@ class User(Resource):
     @api.expect(register_model)
     @ns.response(code=201, model=registered_model, description='Success')
     @ns.response(code=409, model=error_model, description='User already registered')
+    @ns.response(code=503, description='Service currently unavailable')
     def post(self):
         """
         Creates a new user.
