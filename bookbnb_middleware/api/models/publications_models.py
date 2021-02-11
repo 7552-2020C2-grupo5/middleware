@@ -62,6 +62,9 @@ new_publication_model = api.inherit(
             required=True,
             description="Location of the rental place",
         ),
+        "mnemonic": fields.String(
+            required=True, description="Mnemonic of the user wallet"
+        ),
     },
 )
 

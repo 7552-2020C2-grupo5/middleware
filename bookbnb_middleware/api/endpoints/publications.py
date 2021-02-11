@@ -29,8 +29,8 @@ ns = api.namespace(
 @ns.route("/")
 class PublicationsResource(Resource):
     @api.expect(new_publication_model)
-    @api.marshal_with(publication_model)
-    @api.doc("create_publication", responses={200: "Success"})
+    @api.response(code=200, model=publication_model, description="Success")
+    @api.response(code=400, model=error_model, description="Bad request")
     def post(self):
         """
         Creates a new publication.

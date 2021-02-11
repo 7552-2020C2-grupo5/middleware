@@ -1,11 +1,21 @@
 import json
 import requests
-from bookbnb_middleware.constants import PUBLICATIONS_URL
+from bookbnb_middleware.constants import PUBLICATIONS_URL, PAYMENTS_URL
 
 headers = {"content-type": "application/json"}
 
 
 def create_publication(payload):
+    # interaction with payments microservice
+    d = {"mnemonic": payload["mnemonic"], "price": payload["price_per_night"]}
+    payments_req = requests.post(
+        PAYMENTS_URL + '/room', data=json.dumps(d), headers=headers
+    )
+
+    if payments_req.status_code == 500:
+        return payments_req.json(), 400
+
+    # to do, get roomId given by smart contract and save on publications microservice
     r = requests.post(PUBLICATIONS_URL, data=json.dumps(payload), headers=headers)
     return r.json(), r.status_code
 
