@@ -15,6 +15,12 @@ def create_publication(payload):
     if payments_req.status_code == 500:
         return payments_req.json(), 400
 
+    payload.update(
+        payments_req.json()
+    )  # adds transaction hash to payload of the new publication
+    payload.pop("mnemonic")
+    print(payload)
+
     # to do, get roomId given by smart contract and save on publications microservice
     r = requests.post(PUBLICATIONS_URL, data=json.dumps(payload), headers=headers)
     return r.json(), r.status_code
