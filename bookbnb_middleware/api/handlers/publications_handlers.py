@@ -21,7 +21,6 @@ def create_publication(payload):
     payload.pop("mnemonic")
     print(payload)
 
-    # to do, get roomId given by smart contract and save on publications microservice
     r = requests.post(PUBLICATIONS_URL, data=json.dumps(payload), headers=headers)
     return r.json(), r.status_code
 
