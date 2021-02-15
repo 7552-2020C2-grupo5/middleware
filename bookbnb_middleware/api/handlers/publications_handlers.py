@@ -15,13 +15,20 @@ def create_publication(payload):
     if payments_req.status_code == 500:
         return payments_req.json(), 400
 
-    payload.update(
-        payments_req.json()
-    )  # adds transaction hash to payload of the new publication
     payload.pop("mnemonic")
-    print(payload)
 
     r = requests.post(PUBLICATIONS_URL, data=json.dumps(payload), headers=headers)
+    publication_id = r.json()["id"]
+
+    patch_payload = {
+        "blockchain_transaction_hash": payments_req.json()["transaction_hash"]
+    }
+    r = requests.patch(
+        PUBLICATIONS_URL + '/' + str(publication_id),
+        data=json.dumps(patch_payload),
+        headers=headers,
+    )
+
     return r.json(), r.status_code
 
 
