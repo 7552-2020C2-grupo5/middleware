@@ -1,9 +1,9 @@
 # Microservices URIs
-LOGIN_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/login"
-LOGOUT_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/logout"
+LOGIN_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users/login"
+LOGOUT_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users/logout"
 USERS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users"
 TOKEN_VALIDATOR_URL = (
-    "https://bookbnb5-users-microservice.herokuapp.com/v1/validate_token"
+    "https://bookbnb5-users-microservice.herokuapp.com/v1/users/validate_token"
 )
 PUBLICATIONS_URL = "https://bookbnb5-publications.herokuapp.com/v1/publications"
 PAYMENTS_URL = "https://bookbnb5-payments.herokuapp.com"
