@@ -1,16 +1,10 @@
-import json
 import requests
 from bookbnb_middleware.constants import PAYMENTS_URL, CRYPTOCOMPARE_URL
-
-headers = {"content-type": "application/json"}
 
 
 def get_balance(address):
     # interaction with payments microservice
-    d = {"address": address}
-    payments_req = requests.post(
-        PAYMENTS_URL + '/balance', data=json.dumps(d), headers=headers
-    )
+    payments_req = requests.get(PAYMENTS_URL + '/balance/' + address)
 
     if payments_req.status_code == 500:
         return payments_req.json(), 400
