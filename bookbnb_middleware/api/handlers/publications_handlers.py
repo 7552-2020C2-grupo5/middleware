@@ -33,8 +33,10 @@ def create_publication(payload):
 
 
 def list_publications(params):
-    r = requests.get(PUBLICATIONS_URL, params=params)
-    return r.json(), r.status_code
+    if not params["initial_date"] and not params["final_date"]:
+        r = requests.get(PUBLICATIONS_URL, params=params)
+        return r.json(), r.status_code
+    return None, 200  # todo
 
 
 def get_publication(publication_id):

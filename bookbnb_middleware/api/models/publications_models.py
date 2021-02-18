@@ -133,6 +133,26 @@ filter_model.add_argument(
          Note: latitude and longitude are required when using max_distance.",
     store_missing=True,
 )
+filter_model.add_argument(
+    "initial_date",
+    type=str,
+    help="If not final date present it will filter\
+         publications available after initial_date.\
+         Note: if both initial_date and final_date present,\
+         it will filter all publications available between\
+         initial_date and final_date.",
+    store_missing=True,
+)
+filter_model.add_argument(
+    "final_date",
+    type=str,
+    help="If not initial_date present it will filter\
+         all publications available before final_date.\
+         Note: if both initial_date and final_date present,\
+         it will filter all publications available between\
+         initial_date and final_date.",
+    store_missing=True,
+)
 
 error_model = api.model(
     "Publications error model",
