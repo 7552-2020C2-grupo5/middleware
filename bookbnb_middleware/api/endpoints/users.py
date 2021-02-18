@@ -10,6 +10,7 @@ from bookbnb_middleware.api.handlers.users_handlers import (
     get_user_profile,
     edit_user_profile,
     validate_token,
+    reset_password,
 )
 from bookbnb_middleware.api.models.users_models import (
     register_model,
@@ -17,6 +18,8 @@ from bookbnb_middleware.api.models.users_models import (
     login_model,
     logged_model,
     error_model,
+    success_model,
+    email_model,
     profile_model,
     auth_model,
     logged_out_model,
@@ -82,6 +85,20 @@ class User(Resource):
         List all users.
         """
         res, status_code = list_users()
+        return res, status_code
+
+
+@ns.route("/reset_password")
+class ResetPasswordResource(Resource):
+    @api.expect(email_model)
+    @ns.response(code=201, model=success_model, description='Success')
+    @ns.response(code=403, model=error_model, description='User is blocked')
+    @ns.response(code=404, model=error_model, description='User not found')
+    def post(self):
+        """
+        Resets user password and sends email with the new password.
+        """
+        res, status_code = reset_password(request.json)
         return res, status_code
 
 

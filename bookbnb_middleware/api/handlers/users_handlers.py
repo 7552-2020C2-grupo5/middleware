@@ -36,6 +36,13 @@ def register(payload):
     return r.json(), r.status_code
 
 
+def reset_password(payload):
+    r = requests.post(
+        USERS_URL + '/reset_password', data=json.dumps(payload), headers=headers
+    )
+    return r.json(), r.status_code
+
+
 def list_users():
     r = requests.get(USERS_URL)
     return r.json(), r.status_code

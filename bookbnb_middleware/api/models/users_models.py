@@ -32,6 +32,15 @@ error_model = api.model(
     {"message": fields.String(description="A message describing the error")},
 )
 
+success_model = api.model(
+    "User success model",
+    {"status": fields.String(description="A description of the status")},
+)
+
+email_model = api.model(
+    "User email model", {"email": fields.String(description="User email")}
+)
+
 base_user_model = Model(
     "User base model",
     {
