@@ -6,6 +6,7 @@ TOKEN_VALIDATOR_URL = (
     "https://bookbnb5-users-microservice.herokuapp.com/v1/users/validate_token"
 )
 PUBLICATIONS_URL = "https://bookbnb5-publications.herokuapp.com/v1/publications"
+BOOKINGS_URL = "https://bookbnb5-bookings.herokuapp.com/v1/bookings"
 PAYMENTS_URL = "https://bookbnb5-payments.herokuapp.com"
 CRYPTOCOMPARE_URL = (
     "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,EUR"
