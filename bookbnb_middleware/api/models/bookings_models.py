@@ -10,6 +10,9 @@ new_booking_model = api.model(
         "tenant_mnemonic": fields.String(
             required=True, description="The tenant wallet's mnemonic"
         ),
+        "blockchain_id": fields.Integer(
+            required=True, description="The blockchain id of the publication"
+        ),
         "publication_id": fields.Integer(
             required=True, description="The unique identifier of the publication"
         ),
@@ -23,9 +26,6 @@ new_booking_model = api.model(
         ),
         "final_date": fields.Date(
             required=True, description="The final date of the rental"
-        ),
-        "booking_date": fields.DateTime(
-            readonly=True, description="Date the booking was created"
         ),
     },
 )

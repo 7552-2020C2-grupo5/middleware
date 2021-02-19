@@ -68,6 +68,21 @@ new_publication_model = api.inherit(
     },
 )
 
+new_star_model = api.model(
+    "Starred publication",
+    {
+        "user_id": fields.Integer(
+            description="The unique identifier for the user starring the publication"
+        ),
+        "created_at": fields.DateTime(
+            description="Time when the publication was starred"
+        ),
+        "publication_id": fields.Integer(
+            description="The unique identifier for the publication being starred"
+        ),
+    },
+)
+
 publication_model = api.inherit(
     'Created Publication Model',
     base_publication_model,
@@ -77,6 +92,14 @@ publication_model = api.inherit(
         "questions": fields.List(
             fields.Nested(publication_question_model),
             description="Questions regarding the publication",
+        ),
+        "blockchain_status": fields.String(description="The status on the blockchain"),
+        "blockchain_id": fields.Integer(description="The id on the blockchain"),
+        "blockchain_transaction_hash": fields.String(
+            description="The hash of the transaction on the blockchain"
+        ),
+        "stars": fields.List(
+            fields.Nested(new_star_model), description="Stars given to the publication"
         ),
     },
 )
