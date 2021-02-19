@@ -16,6 +16,9 @@ from bookbnb_middleware.api.endpoints.transactions import (
     ns as bookbnb_transactions_namespace,
 )
 from bookbnb_middleware.api.endpoints.bookings import ns as bookbnb_bookings_namespace
+from bookbnb_middleware.api.endpoints.users_reviews import (
+    ns as bookbnb_users_reviews_namespace,
+)
 from bookbnb_middleware.api.api import api
 
 environment = config["development"]
@@ -47,6 +50,7 @@ def initialize_app(flask_app):
     api.add_namespace(bookbnb_questions_namespace)
     api.add_namespace(bookbnb_transactions_namespace)
     api.add_namespace(bookbnb_bookings_namespace)
+    api.add_namespace(bookbnb_users_reviews_namespace)
     flask_app.wsgi_app = ProxyFix(
         flask_app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1
     )
