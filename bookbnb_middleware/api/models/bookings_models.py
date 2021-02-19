@@ -1,5 +1,6 @@
 from bookbnb_middleware.api.api import api
 from flask_restx import fields, reqparse
+from bookbnb_middleware.constants import BlockChainStatus
 
 new_booking_model = api.model(
     'New booking model',
@@ -88,6 +89,21 @@ filter_model.add_argument(
     type=str,
     help="booking date",
     store_missing=False,
+)
+filter_model.add_argument(
+    "blockchain_status",
+    type=str,
+    default=BlockChainStatus.UNSET.value,
+)
+filter_model.add_argument(
+    "blockchain_transaction_hash",
+    type=str,
+    store_missing=False,
+)
+
+error_model = api.model(
+    "Bookings error model",
+    {"message": fields.String(description="A message describing the error")},
 )
 
 error_model = api.model(

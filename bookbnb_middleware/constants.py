@@ -1,3 +1,5 @@
+from enum import Enum
+
 # Microservices URIs
 LOGIN_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users/login"
 LOGOUT_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users/logout"
@@ -11,3 +13,11 @@ PAYMENTS_URL = "https://bookbnb5-payments.herokuapp.com"
 CRYPTOCOMPARE_URL = (
     "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,EUR"
 )
+
+
+class BlockChainStatus(Enum):
+    UNSET = "UNSET"
+    CONFIRMED = "CONFIRMED"
+    DENIED = "DENIED"
+    PENDING = "PENDING"
+    ERROR = "ERROR"

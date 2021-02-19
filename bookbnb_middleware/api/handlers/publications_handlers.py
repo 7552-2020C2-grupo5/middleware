@@ -1,6 +1,6 @@
 import json
 import requests
-from bookbnb_middleware.constants import PUBLICATIONS_URL, PAYMENTS_URL
+from bookbnb_middleware.constants import PUBLICATIONS_URL, PAYMENTS_URL, BOOKINGS_URL
 
 headers = {"content-type": "application/json"}
 
@@ -36,7 +36,35 @@ def list_publications(params):
     if not params["initial_date"] and not params["final_date"]:
         r = requests.get(PUBLICATIONS_URL, params=params)
         return r.json(), r.status_code
-    return None, 200  # todo
+
+    initial_date = params["initial_date"]
+    final_date = params["final_date"]
+
+    # todo ver que blockchain status setear en params_bookings
+    #  hasta que se resuelva el bug!!
+    params_bookings = {
+        "initial_date": initial_date,
+        "final_date": final_date,
+        "blockchain_status": "UNSET",
+    }
+    bookings = requests.get(BOOKINGS_URL, params=params_bookings).json()
+
+    pub_ids_not_available = []
+    for booking in bookings:
+        publication_id = booking["publication_id"]
+        if publication_id not in pub_ids_not_available:
+            pub_ids_not_available.append(publication_id)
+
+    params.pop("initial_date")
+    params.pop("final_date")
+    publications = requests.get(PUBLICATIONS_URL, params=params).json()
+
+    available_publications = []
+    for publication in publications:
+        if publication["id"] not in pub_ids_not_available:
+            available_publications.append(publication)
+
+    return available_publications, 200
 
 
 def get_publication(publication_id):
