@@ -1,7 +1,11 @@
 import logging
 from flask_restx import Resource
+from flask import request
 
-from bookbnb_middleware.api.handlers.bookings_handlers import list_bookings
+from bookbnb_middleware.api.handlers.bookings_handlers import (
+    list_bookings,
+    create_booking,
+)
 from bookbnb_middleware.api.models.bookings_models import (
     new_booking_model,
     booking_model,
@@ -38,4 +42,5 @@ class BookingGetResource(Resource):
         """
         Create new booking.
         """
-        return None, 201  # todo
+        res, status_code = create_booking(request.json)
+        return res, status_code
