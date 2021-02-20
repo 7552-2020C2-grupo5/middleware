@@ -11,6 +11,12 @@ new_booking_model = api.model(
         "tenant_mnemonic": fields.String(
             required=True, description="The tenant wallet's mnemonic"
         ),
+        "tenant_address": fields.String(
+            required=True, description="The tenant wallet's address"
+        ),
+        "publication_owner_id": fields.Integer(
+            required=True, description="The publication owner id"
+        ),
         "blockchain_id": fields.Integer(
             required=True, description="The blockchain id of the publication"
         ),
