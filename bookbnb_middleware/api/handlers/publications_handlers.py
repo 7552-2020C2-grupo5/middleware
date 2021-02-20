@@ -1,6 +1,7 @@
 import json
 import requests
 from bookbnb_middleware.constants import PUBLICATIONS_URL, PAYMENTS_URL, BOOKINGS_URL
+from datetime import datetime
 
 headers = {"content-type": "application/json"}
 
@@ -39,6 +40,13 @@ def list_publications(params):
 
     initial_date = params["initial_date"]
     final_date = params["final_date"]
+
+    if (
+        initial_date
+        and final_date
+        and datetime.fromisoformat(final_date) < datetime.fromisoformat(initial_date)
+    ):
+        return {"message": "final_date must be greater or equal than initial_date"}, 400
 
     # todo ver que blockchain status setear en params_bookings
     #  hasta que se resuelva el bug!!
