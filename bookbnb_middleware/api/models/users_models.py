@@ -7,6 +7,7 @@ login_model = api.model(
     {
         "email": fields.String(required=True, description="Account email"),
         "password": fields.String(required=True, description="Account password"),
+        "push_token": fields.String(required=True, description="Push token"),
     },
 )
 

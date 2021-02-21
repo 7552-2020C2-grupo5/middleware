@@ -1,5 +1,4 @@
 import logging
-
 from flask import request
 from flask_restx import Resource
 from bookbnb_middleware.api.handlers.users_handlers import (

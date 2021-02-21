@@ -103,4 +103,14 @@ def create_booking(payload):
     if accept_req.status_code == 500:
         return accept_req.json(), accept_req.status_code
 
+    # owner_scheduled_notif_payload = {
+    #    "to": ,
+    #    "type": "hostReview",
+    #    "at":
+    # }
+
+    # booker_scheduled_notif_payload = {
+    #    "type": "publicationReview"
+    # }
+
     return bookings_post_req.json(), bookings_post_req.status_code

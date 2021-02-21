@@ -1,19 +1,45 @@
 import requests
 import json
+import base64
 from bookbnb_middleware.constants import (
     LOGIN_URL,
     USERS_URL,
     LOGOUT_URL,
     TOKEN_VALIDATOR_URL,
     PAYMENTS_URL,
+    NOTIFICATIONS_URL,
 )
 
 headers = {"content-type": "application/json"}
 
 
 def login(payload):
-    r = requests.post(LOGIN_URL, data=json.dumps(payload), headers=headers)
-    return r.json(), r.status_code
+
+    login_payload = {"email": payload["email"], "password": payload["password"]}
+    login_req = requests.post(
+        LOGIN_URL, data=json.dumps(login_payload), headers=headers
+    )
+
+    if login_req.status_code != 201:
+        return login_req.json(), login_req.status_code
+
+    token = login_req.json()["token"]
+    s = token.split('.')[1]
+
+    bin_data = base64.urlsafe_b64decode(s + '=' * (4 - len(s) % 4))
+    user_data = json.loads(bin_data.decode())
+
+    push_token_payload = {
+        "user_id": user_data["sub"],
+        "push_token": payload["push_token"],
+    }
+    requests.put(
+        NOTIFICATIONS_URL + '/user_token',
+        data=json.dumps(push_token_payload),
+        headers=headers,
+    )
+
+    return login_req.json(), login_req.status_code
 
 
 def logout(auth_token):
