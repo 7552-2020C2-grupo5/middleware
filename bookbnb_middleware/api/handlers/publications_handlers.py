@@ -48,12 +48,10 @@ def list_publications(params):
     ):
         return {"message": "final_date must be greater or equal than initial_date"}, 400
 
-    # todo ver que blockchain status setear en params_bookings
-    #  hasta que se resuelva el bug!!
     params_bookings = {
         "initial_date": initial_date,
         "final_date": final_date,
-        "blockchain_status": "UNSET",
+        "blockchain_status": "CONFIRMED",
     }
     bookings = requests.get(BOOKINGS_URL, params=params_bookings).json()
 

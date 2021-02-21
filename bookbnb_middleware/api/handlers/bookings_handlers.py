@@ -35,6 +35,8 @@ def create_booking(payload):
     if bookings_post_req.status_code != 201:
         return bookings_post_req.json(), bookings_post_req.status_code
 
+    # intentBookBatch
+
     intent_book_payload = {
         "mnemonic": payload["tenant_mnemonic"],
         "price": payload["price_per_night"],
@@ -52,26 +54,36 @@ def create_booking(payload):
     if payments_req.status_code == 500:
         return payments_req.json(), 400
 
+    transaction_hash = payments_req.json()["transaction_hash"]
+
     bookings_patch_payload = {
-        "blockchain_transaction_hash": payments_req.json()["transaction_hash"],
-        "blockchain_status": "PENDING",
-        "blockchain_id": 0,  # useless
+        "blockchain_transaction_hash": transaction_hash,
     }
     booking_id = bookings_post_req.json()["id"]
 
-    bookings_patch_req = requests.patch(
+    requests.patch(
         BOOKINGS_URL + '/' + str(booking_id),
         data=json.dumps(bookings_patch_payload),
         headers=headers,
     )
+
+    params = {
+        "blockchain_transaction_hash": transaction_hash,
+        "blockchain_status": "PENDING",
+    }
+    while True:
+        r = requests.get(BOOKINGS_URL, params=params)
+        if len(r.json()) > 0:
+            break
+        time.sleep(1)
+
+    # acceptBatch
 
     tenant_address = payload["tenant_address"]
     publication_owner_id = payload["publication_owner_id"]
 
     get_wallet_req = requests.get(USERS_URL + '/wallet/' + str(publication_owner_id))
     mnemonic = get_wallet_req.json()["mnemonic"]
-
-    time.sleep(10)  # todo sacar esta mierda
 
     accept_booking_payload = {
         "roomOwnerMnemonic": mnemonic,
@@ -82,13 +94,13 @@ def create_booking(payload):
         "bookingId": booking_id,
     }
 
-    print(accept_booking_payload)
-
-    r = requests.post(
+    accept_req = requests.post(
         PAYMENTS_URL + '/bookings/accept',
         data=json.dumps(accept_booking_payload),
         headers=headers,
     )
-    print(r.json())
 
-    return bookings_patch_req.json(), bookings_patch_req.status_code
+    if accept_req.status_code == 500:
+        return accept_req.json(), accept_req.status_code
+
+    return bookings_post_req.json(), bookings_post_req.status_code
