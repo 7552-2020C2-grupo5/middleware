@@ -11,6 +11,7 @@ PUBLICATIONS_URL = "https://bookbnb5-publications.herokuapp.com/v1/publications"
 BOOKINGS_URL = "https://bookbnb5-bookings.herokuapp.com/v1/bookings"
 PAYMENTS_URL = "https://bookbnb5-payments.herokuapp.com"
 USER_REVIEWS_URL = "https://bookbnb5-reviews.herokuapp.com/v1/user_reviews"
+NOTIFICATIONS_URL = "https://bookbnb5-notifications.herokuapp.com/v1"
 PUBLICATION_REVIEWS_URL = (
     "https://bookbnb5-reviews.herokuapp.com/v1/publication_reviews"
 )
