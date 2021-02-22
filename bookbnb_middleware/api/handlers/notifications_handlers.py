@@ -18,7 +18,5 @@ def create_instant_notification(payload):
         "body": notifications_payload_body,
     }
 
-    print(notifications_payload)
-
     r = requests.post(url, data=json.dumps(notifications_payload), headers=headers)
     return r.json(), r.status_code
