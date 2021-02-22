@@ -2,7 +2,6 @@ import requests
 import json
 from bookbnb_middleware.constants import BOOKINGS_URL, PAYMENTS_URL, USERS_URL
 from datetime import datetime
-import time
 
 headers = {"content-type": "application/json"}
 
@@ -12,11 +11,19 @@ def list_bookings(params):
     return r.json(), r.status_code
 
 
-def create_booking(payload):
+def create_intent_book(payload):
+
+    initial_date = payload["initial_date"]
+    final_date = payload["final_date"]
+
+    if payload["price_per_night"] <= 0:
+        return {"message": "price por night must be greater than zero"}, 412
+
+    if datetime.fromisoformat(final_date) < datetime.fromisoformat(initial_date):
+        return {"message": "final_date must be greater or equal than initial_date"}, 412
 
     total_days = (
-        datetime.fromisoformat(payload["final_date"])
-        - datetime.fromisoformat(payload["initial_date"])
+        datetime.fromisoformat(final_date) - datetime.fromisoformat(initial_date)
     ).days + 1
 
     total_price = total_days * payload["price_per_night"]
@@ -35,8 +42,6 @@ def create_booking(payload):
     if bookings_post_req.status_code != 201:
         return bookings_post_req.json(), bookings_post_req.status_code
 
-    # intentBookBatch
-
     intent_book_payload = {
         "mnemonic": payload["tenant_mnemonic"],
         "price": payload["price_per_night"],
@@ -45,48 +50,42 @@ def create_booking(payload):
         "finalDate": payload["final_date"],
     }
 
-    payments_req = requests.post(
+    create_intent_book_req = requests.post(
         PAYMENTS_URL + '/bookings',
         data=json.dumps(intent_book_payload),
         headers=headers,
     )
 
-    if payments_req.status_code == 500:
-        return payments_req.json(), 400
+    if create_intent_book_req.status_code == 500:
+        return create_intent_book_req.json(), 400
 
-    transaction_hash = payments_req.json()["transaction_hash"]
+    transaction_hash = create_intent_book_req.json()["transaction_hash"]
 
     bookings_patch_payload = {
         "blockchain_transaction_hash": transaction_hash,
     }
     booking_id = bookings_post_req.json()["id"]
 
-    requests.patch(
+    r = requests.patch(
         BOOKINGS_URL + '/' + str(booking_id),
         data=json.dumps(bookings_patch_payload),
         headers=headers,
     )
 
-    params = {
-        "blockchain_transaction_hash": transaction_hash,
-        "blockchain_status": "PENDING",
-    }
-    while True:
-        r = requests.get(BOOKINGS_URL, params=params)
-        if len(r.json()) > 0:
-            break
-        time.sleep(1)
+    return r.json(), r.status_code
 
-    # acceptBatch
 
-    tenant_address = payload["tenant_address"]
-    publication_owner_id = payload["publication_owner_id"]
+def accept_booking(payload):
 
-    get_wallet_req = requests.get(USERS_URL + '/wallet/' + str(publication_owner_id))
-    mnemonic = get_wallet_req.json()["mnemonic"]
+    tenant_id = payload["tenant_id"]
+    publication_owner_mnemonic = payload["publication_owner_mnemonic"]
+    booking_id = payload["booking_id"]
+
+    get_wallet_req = requests.get(USERS_URL + '/wallet/' + str(tenant_id))
+    tenant_address = get_wallet_req.json()["address"]
 
     accept_booking_payload = {
-        "roomOwnerMnemonic": mnemonic,
+        "roomOwnerMnemonic": publication_owner_mnemonic,
         "bookerAddress": tenant_address,
         "blockchainId": payload["blockchain_id"],
         "initialDate": payload["initial_date"],
@@ -101,7 +100,7 @@ def create_booking(payload):
     )
 
     if accept_req.status_code == 500:
-        return accept_req.json(), accept_req.status_code
+        return accept_req.json(), 400
 
     # owner_scheduled_notif_payload = {
     #    "to": ,
@@ -113,4 +112,34 @@ def create_booking(payload):
     #    "type": "publicationReview"
     # }
 
-    return bookings_post_req.json(), bookings_post_req.status_code
+    return accept_req.json(), accept_req.status_code
+
+
+def reject_booking(payload):
+
+    tenant_id = payload["tenant_id"]
+    publication_owner_mnemonic = payload["publication_owner_mnemonic"]
+    booking_id = payload["booking_id"]
+
+    get_wallet_req = requests.get(USERS_URL + '/wallet/' + str(tenant_id))
+    tenant_address = get_wallet_req.json()["address"]
+
+    reject_booking_payload = {
+        "roomOwnerMnemonic": publication_owner_mnemonic,
+        "bookerAddress": tenant_address,
+        "blockchainId": payload["blockchain_id"],
+        "initialDate": payload["initial_date"],
+        "finalDate": payload["final_date"],
+        "bookingId": booking_id,
+    }
+
+    reject_req = requests.post(
+        PAYMENTS_URL + '/bookings/reject',
+        data=json.dumps(reject_booking_payload),
+        headers=headers,
+    )
+
+    if reject_req.status_code == 500:
+        return reject_req.json(), 400
+
+    return reject_req.json(), reject_req.status_code

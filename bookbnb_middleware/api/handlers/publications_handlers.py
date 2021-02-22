@@ -52,6 +52,7 @@ def list_publications(params):
         "initial_date": initial_date,
         "final_date": final_date,
         "blockchain_status": "CONFIRMED",
+        "booking_status": "ACCEPTED",
     }
     bookings = requests.get(BOOKINGS_URL, params=params_bookings).json()
 

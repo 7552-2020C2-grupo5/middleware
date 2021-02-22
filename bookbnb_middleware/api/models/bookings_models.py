@@ -2,7 +2,7 @@ from bookbnb_middleware.api.api import api
 from flask_restx import fields, reqparse
 from bookbnb_middleware.constants import BlockChainStatus
 
-new_booking_model = api.model(
+create_intent_book_model = api.model(
     'New booking model',
     {
         "tenant_id": fields.Integer(
@@ -10,12 +10,6 @@ new_booking_model = api.model(
         ),
         "tenant_mnemonic": fields.String(
             required=True, description="The tenant wallet's mnemonic"
-        ),
-        "tenant_address": fields.String(
-            required=True, description="The tenant wallet's address"
-        ),
-        "publication_owner_id": fields.Integer(
-            required=True, description="The publication owner id"
         ),
         "blockchain_id": fields.Integer(
             required=True, description="The blockchain id of the publication"
@@ -26,6 +20,56 @@ new_booking_model = api.model(
         "price_per_night": fields.Float(
             required=True,
             description="Price por night of the publication (in ETH)",
+        ),
+        "initial_date": fields.Date(
+            required=True,
+            description="The starting date of the rental",
+        ),
+        "final_date": fields.Date(
+            required=True, description="The final date of the rental"
+        ),
+    },
+)
+
+accept_booking_model = api.model(
+    'Accept booking model',
+    {
+        "tenant_id": fields.Integer(
+            required=True, description="The unique identifier of the tenant"
+        ),
+        "booking_id": fields.Integer(
+            required=True, description="The id of the booking"
+        ),
+        "publication_owner_mnemonic": fields.String(
+            required=True, description="The tenant wallet's mnemonic"
+        ),
+        "blockchain_id": fields.Integer(
+            required=True, description="The blockchain id of the publication"
+        ),
+        "initial_date": fields.Date(
+            required=True,
+            description="The starting date of the rental",
+        ),
+        "final_date": fields.Date(
+            required=True, description="The final date of the rental"
+        ),
+    },
+)
+
+reject_booking_model = api.model(
+    'Reject booking model',
+    {
+        "tenant_id": fields.Integer(
+            required=True, description="The unique identifier of the tenant"
+        ),
+        "booking_id": fields.Integer(
+            required=True, description="The id of the booking"
+        ),
+        "publication_owner_mnemonic": fields.String(
+            required=True, description="The tenant wallet's mnemonic"
+        ),
+        "blockchain_id": fields.Integer(
+            required=True, description="The blockchain id of the publication"
         ),
         "initial_date": fields.Date(
             required=True,
@@ -58,11 +102,6 @@ booking_model = api.model(
             readonly=True, description="Date the booking was created"
         ),
     },
-)
-
-error_model = api.model(
-    "Bookings error model",
-    {"message": fields.String(description="A message describing the error")},
 )
 
 filter_model = reqparse.RequestParser()
@@ -99,17 +138,12 @@ filter_model.add_argument(
 filter_model.add_argument(
     "blockchain_status",
     type=str,
-    default=BlockChainStatus.UNSET.value,
+    default=BlockChainStatus.CONFIRMED.value,
 )
 filter_model.add_argument(
     "blockchain_transaction_hash",
     type=str,
     store_missing=False,
-)
-
-error_model = api.model(
-    "Bookings error model",
-    {"message": fields.String(description="A message describing the error")},
 )
 
 error_model = api.model(
