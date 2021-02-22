@@ -1,7 +1,7 @@
 import requests
 import json
 from bookbnb_middleware.constants import BOOKINGS_URL, PAYMENTS_URL, USERS_URL
-from datetime import datetime
+from datetime import datetime, date
 
 headers = {"content-type": "application/json"}
 
@@ -19,11 +19,11 @@ def create_intent_book(payload):
     if payload["price_per_night"] <= 0:
         return {"message": "price por night must be greater than zero"}, 412
 
-    if datetime.fromisoformat(final_date) < datetime.fromisoformat(initial_date):
+    if date.fromisoformat(final_date) < date.fromisoformat(initial_date):
         return {"message": "final_date must be greater or equal than initial_date"}, 412
 
     total_days = (
-        datetime.fromisoformat(final_date) - datetime.fromisoformat(initial_date)
+        date.fromisoformat(final_date) - date.fromisoformat(initial_date)
     ).days + 1
 
     total_price = total_days * payload["price_per_night"]
