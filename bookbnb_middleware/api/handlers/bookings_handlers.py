@@ -77,8 +77,6 @@ def create_intent_book(payload):
 
 def accept_booking(payload):
 
-    # todo y si no existe el booking id??
-
     tenant_id = payload["tenant_id"]
     publication_owner_mnemonic = payload["publication_owner_mnemonic"]
     booking_id = payload["booking_id"]
@@ -118,8 +116,6 @@ def accept_booking(payload):
 
 
 def reject_booking(payload):
-
-    # todo y si no existe el booking id??
 
     tenant_id = payload["tenant_id"]
     publication_owner_mnemonic = payload["publication_owner_mnemonic"]
