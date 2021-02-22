@@ -101,6 +101,15 @@ booking_model = api.model(
         "booking_date": fields.DateTime(
             readonly=True, description="Date the booking was created"
         ),
+        "blockchain_status": fields.String(
+            description="The status on the blockchain",
+        ),
+        "blockchain_transaction_hash": fields.String(
+            description="The hash of the transaction on the blockchain"
+        ),
+        "booking_status": fields.String(
+            description="The status of the booking",
+        ),
     },
 )
 
@@ -145,6 +154,7 @@ filter_model.add_argument(
     type=str,
     store_missing=False,
 )
+filter_model.add_argument("booking_status", type=str, store_missing=False)
 
 error_model = api.model(
     "Bookings error model",

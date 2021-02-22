@@ -19,8 +19,13 @@ def create_intent_book(payload):
     if payload["price_per_night"] <= 0:
         return {"message": "price por night must be greater than zero"}, 412
 
-    if datetime.fromisoformat(final_date) < datetime.fromisoformat(initial_date):
-        return {"message": "final_date must be greater or equal than initial_date"}, 412
+    try:
+        if datetime.fromisoformat(final_date) < datetime.fromisoformat(initial_date):
+            return {
+                "message": "final_date must be greater or equal than initial_date"
+            }, 412
+    except ValueError:  # initial_date or final_date is invalid
+        return {"message": "either initial_date or initial_date is invalid"}
 
     total_days = (
         datetime.fromisoformat(final_date) - datetime.fromisoformat(initial_date)
