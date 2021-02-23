@@ -7,19 +7,27 @@ headers = {"content-type": "application/json"}
 
 
 def create_publication(payload):
+
+    mnemonic = payload["mnemonic"]
+
+    payload.pop("mnemonic")
+    r = requests.post(PUBLICATIONS_URL, data=json.dumps(payload), headers=headers)
+    if r.status_code != 200:
+        return r.json(), r.status_code
+
+    publication_id = r.json()["id"]
+
     # interaction with payments microservice
-    d = {"mnemonic": payload["mnemonic"], "price": payload["price_per_night"]}
+    d = {
+        "mnemonic": mnemonic,
+        "price": payload["price_per_night"],
+        "publicationId": publication_id,
+    }
     payments_req = requests.post(
         PAYMENTS_URL + '/room', data=json.dumps(d), headers=headers
     )
-
     if payments_req.status_code == 500:
         return payments_req.json(), 400
-
-    payload.pop("mnemonic")
-
-    r = requests.post(PUBLICATIONS_URL, data=json.dumps(payload), headers=headers)
-    publication_id = r.json()["id"]
 
     patch_payload = {
         "blockchain_transaction_hash": payments_req.json()["transaction_hash"]
