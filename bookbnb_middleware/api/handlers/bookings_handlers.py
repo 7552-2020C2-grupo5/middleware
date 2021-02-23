@@ -53,6 +53,7 @@ def create_intent_book(payload):
         "blockchainId": payload["blockchain_id"],
         "initialDate": payload["initial_date"],
         "finalDate": payload["final_date"],
+        "bookingId": bookings_post_req.json()["id"],
     }
 
     create_intent_book_req = requests.post(
