@@ -27,6 +27,7 @@ def create_publication(payload):
         PAYMENTS_URL + '/room', data=json.dumps(d), headers=headers
     )
     if payments_req.status_code == 500:
+        requests.delete(PUBLICATIONS_URL + '/' + str(publication_id))
         return payments_req.json(), 400
 
     patch_payload = {
