@@ -7,6 +7,7 @@ from bookbnb_middleware.api.handlers.publications_handlers import (
     list_publications,
     get_publication,
     replace_publication,
+    block_publication,
 )
 from bookbnb_middleware.api.models.publications_models import (
     publication_model,
@@ -69,4 +70,13 @@ class PublicationResource(Resource):
         Replace a publication by id.
         """
         res, status_code = replace_publication(publication_id, request.json)
+        return res, status_code
+
+    @api.doc("block_publication")
+    @api.response(code=200, description="Publication successfully blocked")
+    @api.response(code=404, description="Publication not found")
+    @api.response(code=403, description="Publication has been already blocked")
+    def delete(self, publication_id):
+        """Block a publication."""
+        res, status_code = block_publication(publication_id)
         return res, status_code

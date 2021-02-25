@@ -8,6 +8,9 @@ headers = {"content-type": "application/json"}
 
 def create_publication(payload):
 
+    if payload["price_per_night"] <= 0:
+        return {"message": "Price must be greater than 0"}, 400
+
     mnemonic = payload["mnemonic"]
 
     payload.pop("mnemonic")
@@ -90,5 +93,11 @@ def get_publication(publication_id):
 
 def replace_publication(publication_id, payload):
     url = PUBLICATIONS_URL + "/" + str(publication_id)
-    r = requests.put(url, data=json.dumps(payload))
+    r = requests.put(url, data=json.dumps(payload), headers=headers)
+    return r.json(), r.status_code
+
+
+def block_publication(publication_id):
+    url = PUBLICATIONS_URL + "/" + str(publication_id)
+    r = requests.delete(url)
     return r.json(), r.status_code
