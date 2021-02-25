@@ -56,13 +56,20 @@ def create_intent_book(payload):
         "bookingId": bookings_post_req.json()["id"],
     }
 
+    booking_id = bookings_post_req.json()["id"]
+
     create_intent_book_req = requests.post(
         PAYMENTS_URL + '/bookings',
         data=json.dumps(intent_book_payload),
         headers=headers,
     )
-
     if create_intent_book_req.status_code == 500:
+        bookings_patch_payload = {"blockchain_status": "ERROR"}
+        requests.patch(
+            BOOKINGS_URL + '/' + str(booking_id),
+            data=json.dumps(bookings_patch_payload),
+            headers=headers,
+        )
         return create_intent_book_req.json(), 400
 
     transaction_hash = create_intent_book_req.json()["transaction_hash"]
@@ -70,7 +77,6 @@ def create_intent_book(payload):
     bookings_patch_payload = {
         "blockchain_transaction_hash": transaction_hash,
     }
-    booking_id = bookings_post_req.json()["id"]
 
     r = requests.patch(
         BOOKINGS_URL + '/' + str(booking_id),
