@@ -124,12 +124,6 @@ filter_model.add_argument(
     store_missing=False,
 )
 filter_model.add_argument(
-    "price_per_night",
-    type=int,
-    help="Max price per night",
-    store_missing=False,
-)
-filter_model.add_argument(
     "user_id",
     type=int,
     help="id of owner user",
@@ -155,6 +149,36 @@ filter_model.add_argument(
     help="The maximum distance (in km.) for the point near to look for.\
          Note: latitude and longitude are required when using max_distance.",
     store_missing=True,
+)
+filter_model.add_argument(
+    "price_per_night_min",
+    type=float,
+    help="min price per night",
+    store_missing=False,
+)
+filter_model.add_argument(
+    "price_per_night_max",
+    type=float,
+    help="max price per night",
+    store_missing=False,
+)
+filter_model.add_argument(
+    "user_id",
+    type=int,
+    help="id of owner user",
+    store_missing=False,
+)
+filter_model.add_argument(
+    "starring_user_id",
+    type=int,
+    help="Id of starring user",
+    store_missing=False,
+)
+filter_model.add_argument(
+    "blockchain_transaction_hash",
+    type=str,
+    help="The hash of the transaction that created the publication on the blockchain",
+    store_missing=False,
 )
 filter_model.add_argument(
     "initial_date",
