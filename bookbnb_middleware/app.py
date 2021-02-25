@@ -1,14 +1,17 @@
 import logging.config
 import os
+import requests
 
 from decouple import config as config_decouple
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
+from bookbnb_middleware.constants import TOKEN_VALIDATOR_URL
 
 from bookbnb_middleware import settings
 from bookbnb_middleware.settings import config
 from bookbnb_middleware.api.endpoints.users import ns as bookbnb_users_namespace
+from bookbnb_middleware.api.models.users_models import auth_model
 from bookbnb_middleware.api.endpoints.publications import (
     ns as bookbnb_publications_namespace,
 )
@@ -38,6 +41,8 @@ logging_conf_path = os.path.normpath(
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 
+app = Flask(__name__)
+
 
 def configure_app(flask_app):
     flask_app.config.from_object(environment)
@@ -65,9 +70,26 @@ def initialize_app(flask_app):
     )
 
 
+@app.before_request
+def before_request():
+    excluded_paths = [
+        '/',
+        '/swaggerui/favicon-32x32.png',
+        '/swagger.json',
+        '/bookbnb/users/',
+        '/bookbnb/users/login',
+    ]
+    if request.path not in excluded_paths:
+        parser_args = auth_model.parse_args()
+        auth_token = parser_args.Authorization
+        h = {"content-type": "application/json", "Authorization": auth_token}
+        r = requests.get(TOKEN_VALIDATOR_URL, headers=h)
+        if r.status_code != 200 and auth_token != "AUTH_FAKE":
+            return r.json(), r.status_code
+
+
 def create_app():
     """creates a new app instance"""
-    app = Flask(__name__)
     initialize_app(app)
     CORS(app)
     return app

@@ -8,7 +8,6 @@ from bookbnb_middleware.api.handlers.users_handlers import (
     list_users,
     get_user_profile,
     edit_user_profile,
-    validate_token,
     reset_password,
 )
 from bookbnb_middleware.api.models.users_models import (
@@ -98,19 +97,6 @@ class ResetPasswordResource(Resource):
         Resets user password and sends email with the new password.
         """
         res, status_code = reset_password(request.json)
-        return res, status_code
-
-
-@ns.route('/validate_token')
-class UserTokenValidatorResource(Resource):
-    @api.expect(auth_model)
-    @api.response(code=200, description="Success")
-    @api.response(code=401, model=error_model, description="Invalid token")
-    @api.response(code=400, model=error_model, description="Malformed token")
-    def get(self):
-        parser_args = auth_model.parse_args()
-        auth_token = parser_args.Authorization
-        res, status_code = validate_token(auth_token)
         return res, status_code
 
 

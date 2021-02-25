@@ -5,7 +5,6 @@ from bookbnb_middleware.constants import (
     LOGIN_URL,
     USERS_URL,
     LOGOUT_URL,
-    TOKEN_VALIDATOR_URL,
     PAYMENTS_URL,
     NOTIFICATIONS_URL,
 )
@@ -71,13 +70,6 @@ def reset_password(payload):
 
 def list_users():
     r = requests.get(USERS_URL)
-    return r.json(), r.status_code
-
-
-def validate_token(auth_token):
-    h = headers
-    h["Authorization"] = auth_token
-    r = requests.get(TOKEN_VALIDATOR_URL, headers=h)
     return r.json(), r.status_code
 
 
