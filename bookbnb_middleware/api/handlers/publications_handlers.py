@@ -92,6 +92,10 @@ def get_publication(publication_id):
 
 
 def replace_publication(publication_id, payload):
+    if payload["price_per_night"] <= 0:
+        return {"message": "Price must be greater than 0"}, 400
+    # todo: interactuar con smart contract para cambiar el precio
+    payload.pop('mnemonic')
     url = PUBLICATIONS_URL + "/" + str(publication_id)
     r = requests.put(url, data=json.dumps(payload), headers=headers)
     return r.json(), r.status_code
@@ -100,4 +104,22 @@ def replace_publication(publication_id, payload):
 def block_publication(publication_id):
     url = PUBLICATIONS_URL + "/" + str(publication_id)
     r = requests.delete(url)
+    return r.json(), r.status_code
+
+
+def star_publication(params, publication_id):
+    url = PUBLICATIONS_URL + "/" + str(publication_id) + '/star'
+    r = requests.post(url, params=params)
+    return r.json(), r.status_code
+
+
+def unstar_publication(params, publication_id):
+    url = PUBLICATIONS_URL + "/" + str(publication_id) + '/star'
+    r = requests.delete(url, params=params)
+    return r.json(), r.status_code
+
+
+def get_starrings(params, publication_id):
+    url = PUBLICATIONS_URL + "/" + str(publication_id) + '/star'
+    r = requests.get(url, params=params)
     return r.json(), r.status_code

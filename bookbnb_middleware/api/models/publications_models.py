@@ -177,6 +177,22 @@ filter_model.add_argument(
     store_missing=True,
 )
 
+publication_star_uid_parser = reqparse.RequestParser()
+publication_star_uid_parser.add_argument(
+    "user_id",
+    type=int,
+    help="Unique identifier for the user",
+    required=True,
+)
+
+publication_star_parser = reqparse.RequestParser()
+publication_star_parser.add_argument(
+    "user_id",
+    type=int,
+    help="Unique identifier for the user",
+    store_missing=False,
+)
+
 error_model = api.model(
     "Publications error model",
     {"message": fields.String(description="A message describing the error")},
