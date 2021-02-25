@@ -3,6 +3,7 @@ import os
 
 from decouple import config as config_decouple
 from flask import Flask
+from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from bookbnb_middleware import settings
@@ -68,4 +69,5 @@ def create_app():
     """creates a new app instance"""
     app = Flask(__name__)
     initialize_app(app)
+    CORS(app)
     return app
