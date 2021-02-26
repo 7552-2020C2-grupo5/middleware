@@ -1,8 +1,7 @@
 black==20.8b1
 flake8==3.8.4
 Flask==1.1.2
-flask-cors
-flask-restplus==0.13.0
+flask-cors==^3.0.9
 flask-restx==0.2.0
 flask-script
 gunicorn==20.0.4

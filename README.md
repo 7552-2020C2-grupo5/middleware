@@ -8,7 +8,7 @@
 
 ### Local deploy
 
-- `pip install -r requirements`
+- `pip install -r requirements  --use-deprecated=legacy-resolver`
 - `gunicorn -w 2 --bind 0.0.0.0:<puerto> "bookbnb_middleware.app:create_app()"`
 
 ### Commits

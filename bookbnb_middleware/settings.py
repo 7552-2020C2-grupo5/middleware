@@ -12,7 +12,6 @@ class ProductionConfig(Config):
 
 config = {"development": DevelopmentConfig, "production": ProductionConfig}
 
-# Flask-Restplus settings
 RESTX_SWAGGER_UI_DOC_EXPANSION = "list"
 RESTX_VALIDATE = True
 RESTX_MASK_SWAGGER = False
