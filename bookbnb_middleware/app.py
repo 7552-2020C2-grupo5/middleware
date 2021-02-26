@@ -7,22 +7,6 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from bookbnb_middleware import settings
 from bookbnb_middleware.api.api import api
-from bookbnb_middleware.api.endpoints.bookings import \
-    ns as bookbnb_bookings_namespace
-from bookbnb_middleware.api.endpoints.notifications import \
-    ns as bookbnb_notifications_namespace
-from bookbnb_middleware.api.endpoints.publications import \
-    ns as bookbnb_publications_namespace
-from bookbnb_middleware.api.endpoints.publications_reviews import \
-    ns as bookbnb_publications_reviews_namespace
-from bookbnb_middleware.api.endpoints.questions import \
-    ns as bookbnb_questions_namespace
-from bookbnb_middleware.api.endpoints.transactions import \
-    ns as bookbnb_transactions_namespace
-from bookbnb_middleware.api.endpoints.users import \
-    ns as bookbnb_users_namespace
-from bookbnb_middleware.api.endpoints.users_reviews import \
-    ns as bookbnb_users_reviews_namespace
 from bookbnb_middleware.api.models.users_models import auth_model
 from bookbnb_middleware.constants import TOKEN_VALIDATOR_URL
 from bookbnb_middleware.settings import config
@@ -41,6 +25,7 @@ log = logging.getLogger(__name__)
 
 
 def before_request():
+    pass
     excluded_paths = [
         "/",
         "/swaggerui/favicon-32x32.png",
@@ -68,13 +53,6 @@ def create_app():
     new_app.config["ERROR_404_HELP"] = settings.RESTX_ERROR_404_HELP
 
     api.init_app(new_app)
-    api.add_namespace(bookbnb_publications_namespace)
-    api.add_namespace(bookbnb_questions_namespace)
-    api.add_namespace(bookbnb_transactions_namespace)
-    api.add_namespace(bookbnb_bookings_namespace)
-    api.add_namespace(bookbnb_users_reviews_namespace)
-    api.add_namespace(bookbnb_publications_reviews_namespace)
-    api.add_namespace(bookbnb_notifications_namespace)
     new_app.wsgi_app = ProxyFix(
         new_app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1
     )
