@@ -84,5 +84,5 @@ def create_app():
     )
     new_app.before_request(before_request)
     new_app.after_request(after_request)
-    CORS(new_app)
+    CORS(new_app, resources={r'/*': {'origins': '*'}})
     return new_app
