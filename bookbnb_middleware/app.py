@@ -22,6 +22,7 @@ logging_conf_path = os.path.normpath(
 )
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
 
 
 def before_request():
@@ -56,6 +57,6 @@ def create_app():
     new_app.wsgi_app = ProxyFix(
         new_app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1
     )
-    new_app.before_request(before_request)
+    # new_app.before_request(before_request)
     CORS(new_app, resources={r"/*": {"origins": "*"}})
     return new_app

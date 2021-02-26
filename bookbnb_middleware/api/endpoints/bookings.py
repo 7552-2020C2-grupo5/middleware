@@ -4,10 +4,19 @@ from flask import request
 from flask_restx import Namespace, Resource
 
 from bookbnb_middleware.api.handlers.bookings_handlers import (
-    accept_booking, create_intent_book, list_bookings, reject_booking)
+    accept_booking,
+    create_intent_book,
+    list_bookings,
+    reject_booking,
+)
 from bookbnb_middleware.api.models.bookings_models import (
-    accept_booking_model, booking_model, create_intent_book_model, error_model,
-    filter_model, reject_booking_model)
+    accept_booking_model,
+    booking_model,
+    create_intent_book_model,
+    error_model,
+    filter_model,
+    reject_booking_model,
+)
 
 log = logging.getLogger(__name__)
 
@@ -16,6 +25,12 @@ ns = Namespace(
     path="/bookbnb/bookings",
     description="Operations related to bookbnb bookings",
 )
+
+ns.models[accept_booking_model.name] = accept_booking_model
+ns.models[booking_model.name] = booking_model
+ns.models[create_intent_book_model.name] = create_intent_book_model
+ns.models[error_model.name] = error_model
+ns.models[reject_booking_model.name] = reject_booking_model
 
 
 @ns.route("")

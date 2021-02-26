@@ -4,10 +4,16 @@ from flask import request
 from flask_restx import Namespace, Resource
 
 from bookbnb_middleware.api.handlers.questions_handlers import (
-    create_question, reply_question)
+    create_question,
+    reply_question,
+)
 from bookbnb_middleware.api.models.questions_models import (
-    error_model, new_publication_question_model, publication_question_model,
-    reply_model)
+    error_model,
+    new_publication_question_model,
+    publication_question_model,
+    reply_model,
+    publication_question_model,
+)
 
 log = logging.getLogger(__name__)
 
@@ -16,6 +22,11 @@ ns = Namespace(
     path="/bookbnb/publications",
     description="Operations related to bookbnb publications questions",
 )
+
+ns.models[error_model.name] = error_model
+ns.models[new_publication_question_model.name] = new_publication_question_model
+ns.models[publication_question_model.name] = publication_question_model
+ns.models[reply_model.name] = reply_model
 
 
 @ns.route("/<int:publication_id>/questions")

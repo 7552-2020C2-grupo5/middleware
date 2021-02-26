@@ -1,12 +1,11 @@
-from flask_restx import fields
-from bookbnb_middleware.api.api import api
+from flask_restx import fields, Model
 
-address_model = api.model(
+address_model = Model(
     "User Wallet Address Model",
     {"address": fields.String(description="The wallet address")},
 )
 
-balance_model = api.model(
+balance_model = Model(
     "Balance Model",
     {
         "ETH": fields.Float(description="Balance of the wallet (in ETH)"),
@@ -15,7 +14,7 @@ balance_model = api.model(
     },
 )
 
-send_transaction_model = api.model(
+send_transaction_model = Model(
     "Send Transaction Model",
     {
         "mnemonic": fields.String(description="The wallet mnemonic of the sender"),
@@ -23,7 +22,7 @@ send_transaction_model = api.model(
     },
 )
 
-error_model = api.model(
+error_model = Model(
     "Transactions error model",
     {"message": fields.String(description="A message describing the error")},
 )

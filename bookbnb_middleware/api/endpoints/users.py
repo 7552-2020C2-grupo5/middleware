@@ -3,21 +3,28 @@ import logging
 from flask import request
 from flask_restx import Namespace, Resource
 
-from bookbnb_middleware.api.handlers.users_handlers import (edit_user_profile,
-                                                            get_user_profile,
-                                                            list_users, login,
-                                                            logout, register,
-                                                            reset_password)
-from bookbnb_middleware.api.models.users_models import (auth_model, edit_model,
-                                                        email_model,
-                                                        error_model,
-                                                        logged_model,
-                                                        logged_out_model,
-                                                        login_model,
-                                                        profile_model,
-                                                        register_model,
-                                                        registered_model,
-                                                        success_model)
+from bookbnb_middleware.api.handlers.users_handlers import (
+    edit_user_profile,
+    get_user_profile,
+    list_users,
+    login,
+    logout,
+    register,
+    reset_password,
+)
+from bookbnb_middleware.api.models.users_models import (
+    auth_model,
+    edit_model,
+    email_model,
+    error_model,
+    logged_model,
+    logged_out_model,
+    login_model,
+    profile_model,
+    register_model,
+    registered_model,
+    success_model,
+)
 
 log = logging.getLogger(__name__)
 
@@ -26,6 +33,17 @@ ns = Namespace(
     path="/bookbnb/users",
     description="Operations related to bookbnb users",
 )
+
+ns.models[edit_model.name] = edit_model
+ns.models[email_model.name] = email_model
+ns.models[logged_model.name] = logged_model
+ns.models[logged_out_model.name] = logged_out_model
+ns.models[login_model.name] = login_model
+ns.models[profile_model.name] = profile_model
+ns.models[register_model.name] = register_model
+ns.models[registered_model.name] = registered_model
+ns.models[success_model.name] = success_model
+ns.models[error_model.name] = error_model
 
 
 @ns.route("/login")

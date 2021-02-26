@@ -4,9 +4,16 @@ from flask import request
 from flask_restx import Namespace, Resource
 
 from bookbnb_middleware.api.handlers.transactions_handlers import (
-    get_address, get_balance, send_transaction)
+    get_address,
+    get_balance,
+    send_transaction,
+)
 from bookbnb_middleware.api.models.transactions_models import (
-    address_model, balance_model, error_model, send_transaction_model)
+    address_model,
+    balance_model,
+    error_model,
+    send_transaction_model,
+)
 
 log = logging.getLogger(__name__)
 
@@ -15,6 +22,11 @@ ns = Namespace(
     path="/bookbnb/transactions",
     description="Operations related to bookbnb transactions",
 )
+
+ns.models[address_model.name] = address_model
+ns.models[balance_model.name] = balance_model
+ns.models[error_model.name] = error_model
+ns.models[send_transaction_model.name] = send_transaction
 
 
 @ns.route("/address/<int:user_id>")

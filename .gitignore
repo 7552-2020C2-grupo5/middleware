@@ -11,3 +11,4 @@ instance/
 
 # Editors
 .idea/
+venv*

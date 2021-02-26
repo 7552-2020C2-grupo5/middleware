@@ -1,8 +1,7 @@
-from bookbnb_middleware.api.api import api
-from flask_restx import fields
+from flask_restx import fields, Model
 
-instant_notification_model = api.model(
-    'Instant notification model',
+instant_notification_model = Model(
+    "Instant notification model",
     {
         "origin_user_id": fields.Integer(
             required=True,

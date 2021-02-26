@@ -3,10 +3,12 @@ import logging
 from flask import request
 from flask_restx import Namespace, Resource
 
-from bookbnb_middleware.api.handlers.notifications_handlers import \
-    create_instant_notification
-from bookbnb_middleware.api.models.notifications_models import \
-    instant_notification_model
+from bookbnb_middleware.api.handlers.notifications_handlers import (
+    create_instant_notification,
+)
+from bookbnb_middleware.api.models.notifications_models import (
+    instant_notification_model,
+)
 
 log = logging.getLogger(__name__)
 
@@ -15,6 +17,8 @@ ns = Namespace(
     path="/bookbnb/notifications",
     description="Operations related to bookbnb notifications",
 )
+
+ns.models[instant_notification_model.name] = instant_notification_model
 
 
 @ns.route("")

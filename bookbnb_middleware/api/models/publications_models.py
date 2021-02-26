@@ -1,8 +1,7 @@
-from flask_restx import fields, reqparse
-from bookbnb_middleware.api.api import api
+from flask_restx import fields, reqparse, Model
 from bookbnb_middleware.api.models.questions_models import publication_question_model
 
-publication_image_model = api.model(
+publication_image_model = Model(
     "Publication Image Model",
     {
         "url": fields.String(required=True, description="URL location for the image"),
@@ -10,7 +9,7 @@ publication_image_model = api.model(
     },
 )
 
-loc_model = api.model(
+loc_model = Model(
     "Location Model",
     {
         "latitude": fields.Float(description="latitude", required=True),
@@ -18,8 +17,8 @@ loc_model = api.model(
     },
 )
 
-base_publication_model = api.model(
-    'Base Publication Model',
+base_publication_model = Model(
+    "Base Publication Model",
     {
         "id": fields.Integer(
             readonly=True, description="The unique identifier of the publication"
@@ -53,9 +52,8 @@ base_publication_model = api.model(
     },
 )
 
-new_publication_model = api.inherit(
+new_publication_model = base_publication_model.inherit(
     "New Publication Model",
-    base_publication_model,
     {
         "loc": fields.Nested(
             loc_model,
@@ -68,7 +66,7 @@ new_publication_model = api.inherit(
     },
 )
 
-new_star_model = api.model(
+new_star_model = Model(
     "Starred publication",
     {
         "user_id": fields.Integer(
@@ -83,9 +81,8 @@ new_star_model = api.model(
     },
 )
 
-publication_model = api.inherit(
-    'Created Publication Model',
-    base_publication_model,
+publication_model = base_publication_model.inherit(
+    "Created Publication Model",
     {
         "loc": fields.Nested(loc_model),
         "publication_date": fields.DateTime(description="Date of the publication"),
@@ -217,7 +214,7 @@ publication_star_parser.add_argument(
     store_missing=False,
 )
 
-error_model = api.model(
+error_model = Model(
     "Publications error model",
     {"message": fields.String(description="A message describing the error")},
 )

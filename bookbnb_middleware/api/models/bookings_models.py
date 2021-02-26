@@ -1,9 +1,8 @@
-from bookbnb_middleware.api.api import api
-from flask_restx import fields, reqparse
+from flask_restx import fields, reqparse, Model
 from bookbnb_middleware.constants import BlockChainStatus
 
-create_intent_book_model = api.model(
-    'New booking model',
+create_intent_book_model = Model(
+    "New booking model",
     {
         "tenant_id": fields.Integer(
             required=True, description="The unique identifier of the tenant"
@@ -31,8 +30,8 @@ create_intent_book_model = api.model(
     },
 )
 
-accept_booking_model = api.model(
-    'Accept booking model',
+accept_booking_model = Model(
+    "Accept booking model",
     {
         "tenant_id": fields.Integer(
             required=True, description="The unique identifier of the tenant"
@@ -56,8 +55,8 @@ accept_booking_model = api.model(
     },
 )
 
-reject_booking_model = api.model(
-    'Reject booking model',
+reject_booking_model = Model(
+    "Reject booking model",
     {
         "tenant_id": fields.Integer(
             required=True, description="The unique identifier of the tenant"
@@ -81,8 +80,8 @@ reject_booking_model = api.model(
     },
 )
 
-booking_model = api.model(
-    'Booking model',
+booking_model = Model(
+    "Booking model",
     {
         "id": fields.Integer(
             description="The unique identifier of the booking",
@@ -156,7 +155,7 @@ filter_model.add_argument(
 )
 filter_model.add_argument("booking_status", type=str, store_missing=False)
 
-error_model = api.model(
+error_model = Model(
     "Bookings error model",
     {"message": fields.String(description="A message describing the error")},
 )

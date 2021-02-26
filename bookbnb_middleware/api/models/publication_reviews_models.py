@@ -1,7 +1,6 @@
-from flask_restx import fields, reqparse
-from bookbnb_middleware.api.api import api
+from flask_restx import fields, reqparse, Model
 
-publication_review_model = api.model(
+publication_review_model = Model(
     "Publication review model",
     {
         "id": fields.Integer(description="The review identifier"),
@@ -24,12 +23,12 @@ publication_review_model = api.model(
     },
 )
 
-error_model = api.model(
+error_model = Model(
     "Reviews error model",
     {"message": fields.String(description="A message describing the error")},
 )
 
-publication_score_model = api.model(
+publication_score_model = Model(
     "Publication score model",
     {
         "publication_id": fields.Integer(
@@ -39,7 +38,7 @@ publication_score_model = api.model(
     },
 )
 
-new_publication_review_model = api.model(
+new_publication_review_model = Model(
     "New publication's review model",
     {
         "reviewer_id": fields.Integer(

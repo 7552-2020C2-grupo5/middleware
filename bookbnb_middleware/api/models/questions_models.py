@@ -1,8 +1,7 @@
-from flask_restx import fields
-from bookbnb_middleware.api.api import api
+from flask_restx import fields, Model
 
 
-new_publication_question_model = api.model(
+new_publication_question_model = Model(
     "New publication question",
     {
         "question": fields.String(
@@ -14,9 +13,8 @@ new_publication_question_model = api.model(
     },
 )
 
-publication_question_model = api.clone(
+publication_question_model = new_publication_question_model.clone(
     "Publication question model",
-    new_publication_question_model,
     {
         "id": fields.Integer(
             description="The unique identifier for the question", readonly=True
@@ -29,12 +27,12 @@ publication_question_model = api.clone(
     },
 )
 
-reply_model = api.model(
+reply_model = Model(
     "Publication reply model",
     {"reply": fields.String(description="The reply to the question", required=True)},
 )
 
-error_model = api.model(
+error_model = Model(
     "Publications error model",
     {"message": fields.String(description="A message describing the error")},
 )

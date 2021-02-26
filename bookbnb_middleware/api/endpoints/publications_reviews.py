@@ -4,11 +4,17 @@ from flask import request
 from flask_restx import Namespace, Resource
 
 from bookbnb_middleware.api.handlers.publication_reviews_handlers import (
-    create_publication_review, get_publication_score,
-    list_publications_reviews)
+    create_publication_review,
+    get_publication_score,
+    list_publications_reviews,
+)
 from bookbnb_middleware.api.models.publication_reviews_models import (
-    error_model, new_publication_review_model, publication_review_model,
-    publication_review_parser, publication_score_model)
+    error_model,
+    new_publication_review_model,
+    publication_review_model,
+    publication_review_parser,
+    publication_score_model,
+)
 
 log = logging.getLogger(__name__)
 
@@ -17,6 +23,10 @@ ns = Namespace(
     path="/bookbnb/publication_reviews",
     description="Operations related to bookbnb publications reviews",
 )
+ns.models[error_model.name] = error_model
+ns.models[new_publication_review_model.name] = new_publication_review_model
+ns.models[publication_review_model.name] = publication_review_model
+ns.models[publication_score_model.name] = publication_score_model
 
 
 @ns.route("/reviews")
