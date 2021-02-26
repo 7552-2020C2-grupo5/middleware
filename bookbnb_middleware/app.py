@@ -1,5 +1,4 @@
 import logging.config
-import os
 
 from decouple import config as config_decouple
 from flask import Flask, request
@@ -17,10 +16,6 @@ environment = config["development"]
 if config_decouple("PRODUCTION", default=False):
     environment = config["production"]
 
-# logging_conf_path = os.path.normpath(
-#    os.path.join(os.path.dirname(__file__), "../logging.conf")
-# )
-# logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 

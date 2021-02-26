@@ -73,6 +73,9 @@ class PublicationsResource(Resource):
 class PublicationResource(Resource):
     @ns.response(code=200, model=publication_model, description="Success")
     @ns.response(code=404, model=error_model, description="Publication not found")
+    @ns.response(
+        code=403, model=error_model, description="Publication has been blocked"
+    )
     def get(self, publication_id):
         """
         Get a publication by id.
@@ -80,9 +83,12 @@ class PublicationResource(Resource):
         res, status_code = get_publication(publication_id)
         return res, status_code
 
-    @ns.response(200, model=publication_model, description="Success")
-    @ns.response(400, model=error_model, description="Bad request")
-    @ns.response(404, model=error_model, description="Publication not found")
+    @ns.response(code=200, model=publication_model, description="Success")
+    @ns.response(code=400, model=error_model, description="Bad request")
+    @ns.response(
+        code=403, model=error_model, description="Publication has been blocked"
+    )
+    @ns.response(code=404, model=error_model, description="Publication not found")
     @ns.expect(new_publication_model)
     def put(self, publication_id):
         """
