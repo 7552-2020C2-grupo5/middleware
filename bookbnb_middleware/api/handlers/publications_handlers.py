@@ -96,7 +96,27 @@ def get_publication(publication_id):
 def replace_publication(publication_id, payload):
     if payload["price_per_night"] <= 0:
         return {"message": "Price must be greater than 0"}, 400
-    # todo: interactuar con smart contract para cambiar el precio
+
+    resp, status_code = get_publication(publication_id)
+    if status_code != 200:
+        return resp, status_code
+
+    mnemonic = payload["mnemonic"]
+    old_price_per_night = resp["price_per_night"]
+    blockchain_id = resp["blockchain_id"]
+    if old_price_per_night != payload["price_per_night"]:
+        # interaction with smart contract
+        d = {
+            "mnemonic": mnemonic,
+            "newPrice": payload["price_per_night"],
+            "roomId": blockchain_id,
+        }
+        payments_req = requests.patch(
+            PAYMENTS_URL + "/room", data=json.dumps(d), headers=headers
+        )
+        if payments_req.status_code == 500:
+            return payments_req.json(), 400
+
     payload.pop("mnemonic")
     url = PUBLICATIONS_URL + "/" + str(publication_id)
     r = requests.put(url, data=json.dumps(payload), headers=headers)
