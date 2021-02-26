@@ -1,24 +1,16 @@
 import logging
 
 from flask import request
-from flask_restx import Resource
-from bookbnb_middleware.api.handlers.transactions_handlers import (
-    get_balance,
-    send_transaction,
-    get_address,
-)
-from bookbnb_middleware.api.models.transactions_models import (
-    error_model,
-    balance_model,
-    send_transaction_model,
-    address_model,
-)
+from flask_restx import Namespace, Resource
 
-from bookbnb_middleware.api.api import api
+from bookbnb_middleware.api.handlers.transactions_handlers import (
+    get_address, get_balance, send_transaction)
+from bookbnb_middleware.api.models.transactions_models import (
+    address_model, balance_model, error_model, send_transaction_model)
 
 log = logging.getLogger(__name__)
 
-ns = api.namespace(
+ns = Namespace(
     name="Transactions",
     path="/bookbnb/transactions",
     description="Operations related to bookbnb transactions",
@@ -26,11 +18,11 @@ ns = api.namespace(
 
 
 @ns.route("/address/<int:user_id>")
-@api.param("user_id", "The user id")
+@ns.param("user_id", "The user id")
 class WalletAddressResource(Resource):
-    @api.response(code=200, model=address_model, description="Success")
-    @api.response(code=404, model=error_model, description="User not Found")
-    @api.response(code=403, model=error_model, description="User Blocked")
+    @ns.response(code=200, model=address_model, description="Success")
+    @ns.response(code=404, model=error_model, description="User not Found")
+    @ns.response(code=403, model=error_model, description="User Blocked")
     def get(self, user_id):
         """
         Gets wallet address related to user id
@@ -40,10 +32,10 @@ class WalletAddressResource(Resource):
 
 
 @ns.route("/<string:address>")
-@api.param("address", "The user's wallet address")
+@ns.param("address", "The user's wallet address")
 class TransactionsResource(Resource):
-    @api.response(code=200, model=balance_model, description="Success")
-    @api.response(code=400, model=error_model, description="Bad request")
+    @ns.response(code=200, model=balance_model, description="Success")
+    @ns.response(code=400, model=error_model, description="Bad request")
     def get(self, address):
         """
         Gets balance of a wallet
@@ -51,9 +43,9 @@ class TransactionsResource(Resource):
         res, status_code = get_balance(address)
         return res, status_code
 
-    @api.response(code=200, description='Success')
-    @api.response(code=400, model=error_model, description='Bad request')
-    @api.expect(send_transaction_model)
+    @ns.response(code=200, description="Success")
+    @ns.response(code=400, model=error_model, description="Bad request")
+    @ns.expect(send_transaction_model)
     def post(self, address):
         """
         Sends fixed ethers to a wallet

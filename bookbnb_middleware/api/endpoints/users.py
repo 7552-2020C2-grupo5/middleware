@@ -1,34 +1,27 @@
 import logging
-from flask import request
-from flask_restx import Resource
-from bookbnb_middleware.api.handlers.users_handlers import (
-    login,
-    logout,
-    register,
-    list_users,
-    get_user_profile,
-    edit_user_profile,
-    reset_password,
-)
-from bookbnb_middleware.api.models.users_models import (
-    register_model,
-    registered_model,
-    login_model,
-    logged_model,
-    error_model,
-    success_model,
-    email_model,
-    profile_model,
-    auth_model,
-    logged_out_model,
-    edit_model,
-)
 
-from bookbnb_middleware.api.api import api
+from flask import request
+from flask_restx import Namespace, Resource
+
+from bookbnb_middleware.api.handlers.users_handlers import (edit_user_profile,
+                                                            get_user_profile,
+                                                            list_users, login,
+                                                            logout, register,
+                                                            reset_password)
+from bookbnb_middleware.api.models.users_models import (auth_model, edit_model,
+                                                        email_model,
+                                                        error_model,
+                                                        logged_model,
+                                                        logged_out_model,
+                                                        login_model,
+                                                        profile_model,
+                                                        register_model,
+                                                        registered_model,
+                                                        success_model)
 
 log = logging.getLogger(__name__)
 
-ns = api.namespace(
+ns = Namespace(
     name="Users",
     path="/bookbnb/users",
     description="Operations related to bookbnb users",
@@ -37,10 +30,10 @@ ns = api.namespace(
 
 @ns.route("/login")
 class Login(Resource):
-    @api.expect(login_model)
-    @ns.response(code=201, model=logged_model, description='Success')
-    @ns.response(code=401, model=error_model, description='Invalid credentials')
-    @ns.response(code=404, model=error_model, description='User does not exist')
+    @ns.expect(login_model)
+    @ns.response(code=201, model=logged_model, description="Success")
+    @ns.response(code=401, model=error_model, description="Invalid credentials")
+    @ns.response(code=404, model=error_model, description="User does not exist")
     def post(self):
         """
         Logins user
@@ -51,9 +44,9 @@ class Login(Resource):
 
 @ns.route("/logout")
 class Logout(Resource):
-    @api.expect(auth_model)
-    @ns.response(code=201, model=logged_out_model, description='Success')
-    @ns.response(code=401, model=error_model, description='Token invalid or malformed')
+    @ns.expect(auth_model)
+    @ns.response(code=201, model=logged_out_model, description="Success")
+    @ns.response(code=401, model=error_model, description="Token invalid or malformed")
     def post(self):
         """
         Logouts user
@@ -66,10 +59,10 @@ class Logout(Resource):
 
 @ns.route("/")
 class User(Resource):
-    @api.expect(register_model)
-    @ns.response(code=201, model=registered_model, description='Success')
-    @ns.response(code=409, model=error_model, description='User already registered')
-    @ns.response(code=503, description='Service currently unavailable')
+    @ns.expect(register_model)
+    @ns.response(code=201, model=registered_model, description="Success")
+    @ns.response(code=409, model=error_model, description="User already registered")
+    @ns.response(code=503, description="Service currently unavailable")
     def post(self):
         """
         Creates a new user.
@@ -77,7 +70,7 @@ class User(Resource):
         res, status_code = register(request.json)
         return res, status_code
 
-    @api.marshal_list_with(profile_model)
+    @ns.marshal_list_with(profile_model)
     def get(self):
         """
         List all users.
@@ -88,10 +81,10 @@ class User(Resource):
 
 @ns.route("/reset_password")
 class ResetPasswordResource(Resource):
-    @api.expect(email_model)
-    @ns.response(code=201, model=success_model, description='Success')
-    @ns.response(code=403, model=error_model, description='User is blocked')
-    @ns.response(code=404, model=error_model, description='User not found')
+    @ns.expect(email_model)
+    @ns.response(code=201, model=success_model, description="Success")
+    @ns.response(code=403, model=error_model, description="User is blocked")
+    @ns.response(code=404, model=error_model, description="User not found")
     def post(self):
         """
         Resets user password and sends email with the new password.
@@ -101,9 +94,9 @@ class ResetPasswordResource(Resource):
 
 
 @ns.route("/<int:user_id>")
-@api.param("user_id", "The user unique identifier")
-@api.response(code=200, model=profile_model, description="Success")
-@api.response(code=404, model=error_model, description="User not found")
+@ns.param("user_id", "The user unique identifier")
+@ns.response(code=200, model=profile_model, description="Success")
+@ns.response(code=404, model=error_model, description="User not found")
 class UserById(Resource):
     def get(self, user_id):
         """
@@ -112,7 +105,7 @@ class UserById(Resource):
         res, status_code = get_user_profile(user_id)
         return res, status_code
 
-    @api.expect(edit_model)
+    @ns.expect(edit_model)
     def put(self, user_id):
         """
         Replace a user by id.

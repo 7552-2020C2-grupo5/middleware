@@ -1,37 +1,27 @@
 import logging
-from flask_restx import Resource
+
 from flask import request
+from flask_restx import Namespace, Resource
 
 from bookbnb_middleware.api.handlers.bookings_handlers import (
-    list_bookings,
-    create_intent_book,
-    accept_booking,
-    reject_booking,
-)
+    accept_booking, create_intent_book, list_bookings, reject_booking)
 from bookbnb_middleware.api.models.bookings_models import (
-    create_intent_book_model,
-    accept_booking_model,
-    reject_booking_model,
-    booking_model,
-    filter_model,
-    error_model,
-)
-
-from bookbnb_middleware.api.api import api
+    accept_booking_model, booking_model, create_intent_book_model, error_model,
+    filter_model, reject_booking_model)
 
 log = logging.getLogger(__name__)
 
-ns = api.namespace(
+ns = Namespace(
     name="Bookings",
     path="/bookbnb/bookings",
     description="Operations related to bookbnb bookings",
 )
 
 
-@ns.route('')
+@ns.route("")
 class BookingGetResource(Resource):
-    @api.marshal_list_with(booking_model)
-    @api.expect(filter_model)
+    @ns.marshal_list_with(booking_model)
+    @ns.expect(filter_model)
     def get(self):
         """
         List all bookings.
@@ -40,12 +30,12 @@ class BookingGetResource(Resource):
         return res, status_code
 
 
-@ns.route('/intent_book')
+@ns.route("/intent_book")
 class CreateIntentBookResource(Resource):
-    @api.expect(create_intent_book_model)
-    @ns.response(code=200, model=booking_model, description='Success')
-    @ns.response(code=412, model=error_model, description='Precondition Failed')
-    @ns.response(code=400, model=error_model, description='Payment failed')
+    @ns.expect(create_intent_book_model)
+    @ns.response(code=200, model=booking_model, description="Success")
+    @ns.response(code=412, model=error_model, description="Precondition Failed")
+    @ns.response(code=400, model=error_model, description="Payment failed")
     def post(self):
         """
         Create new intent book.
@@ -54,11 +44,11 @@ class CreateIntentBookResource(Resource):
         return res, status_code
 
 
-@ns.route('/accept_booking')
+@ns.route("/accept_booking")
 class AcceptBookingResource(Resource):
-    @api.expect(accept_booking_model)
-    @ns.response(code=200, description='Success')
-    @ns.response(code=400, model=error_model, description='Payment failed')
+    @ns.expect(accept_booking_model)
+    @ns.response(code=200, description="Success")
+    @ns.response(code=400, model=error_model, description="Payment failed")
     def post(self):
         """
         Accept a booking.
@@ -67,11 +57,11 @@ class AcceptBookingResource(Resource):
         return res, status_code
 
 
-@ns.route('/reject_booking')
+@ns.route("/reject_booking")
 class RejectBookingResource(Resource):
-    @api.expect(reject_booking_model)
-    @ns.response(code=200, description='Success')
-    @ns.response(code=400, model=error_model, description='Payment failed')
+    @ns.expect(reject_booking_model)
+    @ns.response(code=200, description="Success")
+    @ns.response(code=400, model=error_model, description="Payment failed")
     def post(self):
         """
         Reject a booking.
