@@ -32,6 +32,11 @@ def before_request():
         "/swagger.json",
         "/bookbnb/users/",
         "/bookbnb/users/login",
+        "/swaggerui/swagger-ui-standalone-preset.js",
+        "/swaggerui/swagger-ui-standalone-preset.js",
+        "/swaggerui/swagger-ui-bundle.js",
+        "/swaggerui/swagger-ui.css",
+        "/swaggerui/droid-sans.css",
     ]
     if request.path not in excluded_paths and request.method != "OPTIONS":
         parser_args = auth_model.parse_args()
