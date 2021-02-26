@@ -27,6 +27,7 @@ def before_request():
         "/swagger.json",
         "/bookbnb/users/",
         "/bookbnb/users/login",
+        "/bookbnb/oauth/login",
         "/swaggerui/swagger-ui-standalone-preset.js",
         "/swaggerui/swagger-ui-standalone-preset.js",
         "/swaggerui/swagger-ui-bundle.js",

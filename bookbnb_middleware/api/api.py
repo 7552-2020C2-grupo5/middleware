@@ -12,13 +12,14 @@ from bookbnb_middleware.api.endpoints.questions import ns as questions_namespace
 from bookbnb_middleware.api.endpoints.transactions import ns as transactions_namespace
 from bookbnb_middleware.api.endpoints.users import ns as users_namespace
 from bookbnb_middleware.api.endpoints.users_reviews import ns as users_reviews_namespace
+from bookbnb_middleware.api.endpoints.oauth import ns as oauth_namespace
 
 log = logging.getLogger(__name__)
 
 api = Api(
-    version="1.0.1",
+    version="1.0.0",
     title="BookBNB Middleware API",
-    description="BookBNB Middleware API for integrating backend microservices",
+    description="Middleware API for integrating BookBNB backend microservices",
 )
 api.add_namespace(publications_namespace)
 api.add_namespace(questions_namespace)
@@ -28,6 +29,7 @@ api.add_namespace(users_reviews_namespace)
 api.add_namespace(publications_reviews_namespace)
 api.add_namespace(notifications_namespace)
 api.add_namespace(users_namespace)
+api.add_namespace(oauth_namespace)
 
 
 @api.errorhandler
