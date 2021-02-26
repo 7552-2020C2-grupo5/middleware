@@ -57,11 +57,6 @@ def before_request():
             return r.json(), r.status_code
     return 
 
-def after_request(response):
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
-
-
 def create_app():
     new_app = Flask(__name__)
 
