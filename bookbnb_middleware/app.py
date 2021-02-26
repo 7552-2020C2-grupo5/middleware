@@ -55,7 +55,8 @@ def before_request():
         r = requests.get(TOKEN_VALIDATOR_URL, headers=h)
         if r.status_code != 200 and auth_token != "AUTH_FAKE":
             return r.json(), r.status_code
-    return 
+    return
+
 
 def create_app():
     new_app = Flask(__name__)
@@ -78,6 +79,5 @@ def create_app():
         new_app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1
     )
     new_app.before_request(before_request)
-    new_app.after_request(after_request)
-    CORS(new_app, resources={r'/*': {'origins': '*'}})
+    CORS(new_app, resources={r"/*": {"origins": "*"}})
     return new_app
