@@ -14,17 +14,17 @@ from bookbnb_middleware.api.handlers.publications_handlers import (
     unstar_publication,
 )
 from bookbnb_middleware.api.models.publications_models import (
+    base_publication_model,
     error_model,
     filter_model,
+    loc_model,
     new_publication_model,
     new_star_model,
+    publication_image_model,
     publication_model,
+    publication_question_model,
     publication_star_parser,
     publication_star_uid_parser,
-    base_publication_model,
-    publication_image_model,
-    loc_model,
-    publication_question_model,
 )
 
 log = logging.getLogger(__name__)

@@ -12,7 +12,6 @@ from bookbnb_middleware.api.models.questions_models import (
     new_publication_question_model,
     publication_question_model,
     reply_model,
-    publication_question_model,
 )
 
 log = logging.getLogger(__name__)

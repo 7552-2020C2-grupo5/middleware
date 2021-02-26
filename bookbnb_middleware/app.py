@@ -1,8 +1,10 @@
 import logging.config
 import os
 
-import requests
+from decouple import config as config_decouple
 from flask import Flask, request
+from flask_cors import CORS
+import requests
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from bookbnb_middleware import settings
@@ -10,8 +12,6 @@ from bookbnb_middleware.api.api import api
 from bookbnb_middleware.api.models.users_models import auth_model
 from bookbnb_middleware.constants import TOKEN_VALIDATOR_URL
 from bookbnb_middleware.settings import config
-from decouple import config as config_decouple
-from flask_cors import CORS
 
 environment = config["development"]
 if config_decouple("PRODUCTION", default=False):

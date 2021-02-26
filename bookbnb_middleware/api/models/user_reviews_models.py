@@ -1,4 +1,4 @@
-from flask_restx import fields, reqparse, Model
+from flask_restx import Model, fields, reqparse
 
 user_review_model = Model(
     "User review model",

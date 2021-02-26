@@ -1,12 +1,14 @@
-import requests
-import json
 import base64
+import json
+
+import requests
+
 from bookbnb_middleware.constants import (
     LOGIN_URL,
-    USERS_URL,
     LOGOUT_URL,
-    PAYMENTS_URL,
     NOTIFICATIONS_URL,
+    PAYMENTS_URL,
+    USERS_URL,
 )
 
 headers = {"content-type": "application/json"}
@@ -23,9 +25,9 @@ def login(payload):
         return login_req.json(), login_req.status_code
 
     token = login_req.json()["token"]
-    s = token.split('.')[1]
+    s = token.split(".")[1]
 
-    bin_data = base64.urlsafe_b64decode(s + '=' * (4 - len(s) % 4))
+    bin_data = base64.urlsafe_b64decode(s + "=" * (4 - len(s) % 4))
     user_data = json.loads(bin_data.decode())
 
     push_token_payload = {
@@ -33,7 +35,7 @@ def login(payload):
         "push_token": payload["push_token"],
     }
     requests.put(
-        NOTIFICATIONS_URL + '/user_token',
+        NOTIFICATIONS_URL + "/user_token",
         data=json.dumps(push_token_payload),
         headers=headers,
     )
@@ -49,7 +51,7 @@ def logout(auth_token):
 
 
 def register(payload):
-    wallet_req = requests.post(PAYMENTS_URL + '/identity')
+    wallet_req = requests.post(PAYMENTS_URL + "/identity")
     if wallet_req.status_code != 200:
         return None, 503
 
@@ -63,7 +65,7 @@ def register(payload):
 
 def reset_password(payload):
     r = requests.post(
-        USERS_URL + '/reset_password', data=json.dumps(payload), headers=headers
+        USERS_URL + "/reset_password", data=json.dumps(payload), headers=headers
     )
     return r.json(), r.status_code
 

@@ -1,5 +1,4 @@
-from flask_restx import fields, Model
-
+from flask_restx import Model, fields
 
 new_publication_question_model = Model(
     "New publication question",

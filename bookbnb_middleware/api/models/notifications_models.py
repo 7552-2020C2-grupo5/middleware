@@ -1,4 +1,4 @@
-from flask_restx import fields, Model
+from flask_restx import Model, fields
 
 instant_notification_model = Model(
     "Instant notification model",

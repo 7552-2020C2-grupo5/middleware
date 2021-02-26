@@ -1,7 +1,9 @@
-import json
-import requests
-from bookbnb_middleware.constants import PUBLICATIONS_URL, PAYMENTS_URL, BOOKINGS_URL
 from datetime import datetime
+import json
+
+import requests
+
+from bookbnb_middleware.constants import BOOKINGS_URL, PAYMENTS_URL, PUBLICATIONS_URL
 
 headers = {"content-type": "application/json"}
 
@@ -27,17 +29,17 @@ def create_publication(payload):
         "publicationId": publication_id,
     }
     payments_req = requests.post(
-        PAYMENTS_URL + '/room', data=json.dumps(d), headers=headers
+        PAYMENTS_URL + "/room", data=json.dumps(d), headers=headers
     )
     if payments_req.status_code == 500:
-        requests.delete(PUBLICATIONS_URL + '/' + str(publication_id))
+        requests.delete(PUBLICATIONS_URL + "/" + str(publication_id))
         return payments_req.json(), 400
 
     patch_payload = {
         "blockchain_transaction_hash": payments_req.json()["transaction_hash"]
     }
     r = requests.patch(
-        PUBLICATIONS_URL + '/' + str(publication_id),
+        PUBLICATIONS_URL + "/" + str(publication_id),
         data=json.dumps(patch_payload),
         headers=headers,
     )
@@ -95,7 +97,7 @@ def replace_publication(publication_id, payload):
     if payload["price_per_night"] <= 0:
         return {"message": "Price must be greater than 0"}, 400
     # todo: interactuar con smart contract para cambiar el precio
-    payload.pop('mnemonic')
+    payload.pop("mnemonic")
     url = PUBLICATIONS_URL + "/" + str(publication_id)
     r = requests.put(url, data=json.dumps(payload), headers=headers)
     return r.json(), r.status_code
@@ -108,18 +110,18 @@ def block_publication(publication_id):
 
 
 def star_publication(params, publication_id):
-    url = PUBLICATIONS_URL + "/" + str(publication_id) + '/star'
+    url = PUBLICATIONS_URL + "/" + str(publication_id) + "/star"
     r = requests.post(url, params=params)
     return r.json(), r.status_code
 
 
 def unstar_publication(params, publication_id):
-    url = PUBLICATIONS_URL + "/" + str(publication_id) + '/star'
+    url = PUBLICATIONS_URL + "/" + str(publication_id) + "/star"
     r = requests.delete(url, params=params)
     return r.json(), r.status_code
 
 
 def get_starrings(params, publication_id):
-    url = PUBLICATIONS_URL + "/" + str(publication_id) + '/star'
+    url = PUBLICATIONS_URL + "/" + str(publication_id) + "/star"
     r = requests.get(url, params=params)
     return r.json(), r.status_code

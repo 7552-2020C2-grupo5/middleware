@@ -1,7 +1,9 @@
-import requests
-import json
-from bookbnb_middleware.constants import BOOKINGS_URL, PAYMENTS_URL, USERS_URL
 from datetime import datetime
+import json
+
+import requests
+
+from bookbnb_middleware.constants import BOOKINGS_URL, PAYMENTS_URL, USERS_URL
 
 headers = {"content-type": "application/json"}
 
@@ -59,14 +61,14 @@ def create_intent_book(payload):
     booking_id = bookings_post_req.json()["id"]
 
     create_intent_book_req = requests.post(
-        PAYMENTS_URL + '/bookings',
+        PAYMENTS_URL + "/bookings",
         data=json.dumps(intent_book_payload),
         headers=headers,
     )
     if create_intent_book_req.status_code == 500:
         bookings_patch_payload = {"blockchain_status": "ERROR"}
         requests.patch(
-            BOOKINGS_URL + '/' + str(booking_id),
+            BOOKINGS_URL + "/" + str(booking_id),
             data=json.dumps(bookings_patch_payload),
             headers=headers,
         )
@@ -79,7 +81,7 @@ def create_intent_book(payload):
     }
 
     r = requests.patch(
-        BOOKINGS_URL + '/' + str(booking_id),
+        BOOKINGS_URL + "/" + str(booking_id),
         data=json.dumps(bookings_patch_payload),
         headers=headers,
     )
@@ -93,7 +95,7 @@ def accept_booking(payload):
     publication_owner_mnemonic = payload["publication_owner_mnemonic"]
     booking_id = payload["booking_id"]
 
-    get_wallet_req = requests.get(USERS_URL + '/wallet/' + str(tenant_id))
+    get_wallet_req = requests.get(USERS_URL + "/wallet/" + str(tenant_id))
     tenant_address = get_wallet_req.json()["address"]
 
     accept_booking_payload = {
@@ -106,7 +108,7 @@ def accept_booking(payload):
     }
 
     accept_req = requests.post(
-        PAYMENTS_URL + '/bookings/accept',
+        PAYMENTS_URL + "/bookings/accept",
         data=json.dumps(accept_booking_payload),
         headers=headers,
     )
@@ -133,7 +135,7 @@ def reject_booking(payload):
     publication_owner_mnemonic = payload["publication_owner_mnemonic"]
     booking_id = payload["booking_id"]
 
-    get_wallet_req = requests.get(USERS_URL + '/wallet/' + str(tenant_id))
+    get_wallet_req = requests.get(USERS_URL + "/wallet/" + str(tenant_id))
     tenant_address = get_wallet_req.json()["address"]
 
     reject_booking_payload = {
@@ -146,7 +148,7 @@ def reject_booking(payload):
     }
 
     reject_req = requests.post(
-        PAYMENTS_URL + '/bookings/reject',
+        PAYMENTS_URL + "/bookings/reject",
         data=json.dumps(reject_booking_payload),
         headers=headers,
     )

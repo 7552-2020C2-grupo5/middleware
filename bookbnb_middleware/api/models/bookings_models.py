@@ -1,4 +1,5 @@
-from flask_restx import fields, reqparse, Model
+from flask_restx import Model, fields, reqparse
+
 from bookbnb_middleware.constants import BlockChainStatus
 
 create_intent_book_model = Model(

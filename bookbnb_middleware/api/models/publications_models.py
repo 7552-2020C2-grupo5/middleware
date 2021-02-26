@@ -1,4 +1,5 @@
-from flask_restx import fields, reqparse, Model
+from flask_restx import Model, fields, reqparse
+
 from bookbnb_middleware.api.models.questions_models import publication_question_model
 
 publication_image_model = Model(

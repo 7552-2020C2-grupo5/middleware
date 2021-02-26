@@ -1,5 +1,4 @@
-from flask_restx import fields, reqparse, Model
-
+from flask_restx import Model, fields, reqparse
 
 login_model = Model(
     "User login model",

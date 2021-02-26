@@ -1,6 +1,8 @@
-import requests
 import json
-from bookbnb_middleware.constants import PAYMENTS_URL, CRYPTOCOMPARE_URL, USERS_URL
+
+import requests
+
+from bookbnb_middleware.constants import CRYPTOCOMPARE_URL, PAYMENTS_URL, USERS_URL
 
 headers = {"content-type": "application/json"}
 
@@ -13,7 +15,7 @@ def get_address(user_id):
 
 def get_balance(address):
     # interaction with payments microservice
-    payments_req = requests.get(PAYMENTS_URL + '/balance/' + address)
+    payments_req = requests.get(PAYMENTS_URL + "/balance/" + address)
 
     if payments_req.status_code == 500:
         return payments_req.json(), 400
@@ -32,7 +34,7 @@ def get_balance(address):
 
 def send_transaction(address, payload):
     payments_req = requests.post(
-        PAYMENTS_URL + '/balance/' + address, data=json.dumps(payload), headers=headers
+        PAYMENTS_URL + "/balance/" + address, data=json.dumps(payload), headers=headers
     )
     if payments_req.status_code == 500:
         return payments_req.json(), 400

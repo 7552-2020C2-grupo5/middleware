@@ -1,5 +1,7 @@
 import json
+
 import requests
+
 from bookbnb_middleware.constants import PUBLICATIONS_URL
 
 headers = {"content-type": "application/json"}

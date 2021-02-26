@@ -1,4 +1,4 @@
-from flask_restx import fields, Model
+from flask_restx import Model, fields
 
 address_model = Model(
     "User Wallet Address Model",
