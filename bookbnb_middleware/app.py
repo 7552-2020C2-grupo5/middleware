@@ -33,14 +33,13 @@ def before_request():
         "/bookbnb/users/",
         "/bookbnb/users/login",
     ]
-    if request.path not in excluded_paths:
+    if request.path not in excluded_paths and request.method != "OPTIONS":
         parser_args = auth_model.parse_args()
         auth_token = parser_args.Authorization
         h = {"content-type": "application/json", "Authorization": auth_token}
         r = requests.get(TOKEN_VALIDATOR_URL, headers=h)
         if r.status_code != 200 and auth_token != "AUTH_FAKE":
             return r.json(), r.status_code
-    return
 
 
 def create_app():
