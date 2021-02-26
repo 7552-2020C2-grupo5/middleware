@@ -22,7 +22,7 @@ api = Api(
 )
 api.add_namespace(publications_namespace)
 api.add_namespace(questions_namespace)
-# api.add_namespace(transactions_namespace)
+api.add_namespace(transactions_namespace)
 api.add_namespace(bookings_namespace)
 api.add_namespace(users_reviews_namespace)
 api.add_namespace(publications_reviews_namespace)

@@ -26,7 +26,7 @@ ns = Namespace(
 ns.models[address_model.name] = address_model
 ns.models[balance_model.name] = balance_model
 ns.models[error_model.name] = error_model
-ns.models[send_transaction_model.name] = send_transaction
+ns.models[send_transaction_model.name] = send_transaction_model
 
 
 @ns.route("/address/<int:user_id>")
