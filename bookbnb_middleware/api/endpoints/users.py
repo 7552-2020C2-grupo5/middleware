@@ -5,6 +5,7 @@ from flask_restx import Namespace, Resource
 
 from bookbnb_middleware.api.handlers.users_handlers import (
     edit_user_profile,
+    block_user,
     get_user_profile,
     list_users,
     login,
@@ -24,6 +25,7 @@ from bookbnb_middleware.api.models.users_models import (
     register_model,
     registered_model,
     success_model,
+    user_parser,
 )
 
 log = logging.getLogger(__name__)
@@ -88,12 +90,13 @@ class User(Resource):
         res, status_code = register(request.json)
         return res, status_code
 
+    @ns.expect(user_parser)
     @ns.marshal_list_with(profile_model)
     def get(self):
         """
-        List all users.
+        List users that match all filters.
         """
-        res, status_code = list_users()
+        res, status_code = list_users(user_parser.parse_args())
         return res, status_code
 
 
@@ -115,6 +118,7 @@ class ResetPasswordResource(Resource):
 @ns.param("user_id", "The user unique identifier")
 @ns.response(code=200, model=profile_model, description="Success")
 @ns.response(code=404, model=error_model, description="User not found")
+@ns.response(code=403, model=error_model, description="User is blocked")
 class UserById(Resource):
     def get(self, user_id):
         """
@@ -129,4 +133,11 @@ class UserById(Resource):
         Replace a user by id.
         """
         res, status_code = edit_user_profile(user_id, request.json)
+        return res, status_code
+
+    def delete(self, user_id):
+        """
+        Block a user by id.
+        """
+        res, status_code = block_user(user_id)
         return res, status_code

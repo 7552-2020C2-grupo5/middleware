@@ -70,8 +70,8 @@ def reset_password(payload):
     return r.json(), r.status_code
 
 
-def list_users():
-    r = requests.get(USERS_URL)
+def list_users(params):
+    r = requests.get(USERS_URL, params=params)
     return r.json(), r.status_code
 
 
@@ -84,4 +84,10 @@ def get_user_profile(user_id):
 def edit_user_profile(user_id, payload):
     url = USERS_URL + "/" + str(user_id)
     r = requests.put(url, data=json.dumps(payload), headers=headers)
+    return r.json(), r.status_code
+
+
+def block_user(user_id):
+    url = USERS_URL + "/" + str(user_id)
+    r = requests.delete(url)
     return r.json(), r.status_code

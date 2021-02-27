@@ -18,6 +18,26 @@ auth_model.add_argument(
     "Authorization", type=str, location="headers", help="Access token", required=True
 )
 
+user_parser = reqparse.RequestParser()
+user_parser.add_argument(
+    "first_name",
+    type=str,
+    help="First name to filter on",
+    store_missing=False,
+)
+user_parser.add_argument(
+    "last_name",
+    type=str,
+    help="Last name to filter on",
+    store_missing=False,
+)
+user_parser.add_argument(
+    "email",
+    type=str,
+    help="Email to filter on",
+    store_missing=False,
+)
+
 logged_out_model = Model(
     "User logged out model",
     {
