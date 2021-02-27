@@ -3,6 +3,11 @@ import json
 
 import requests
 
+from bookbnb_middleware.api.handlers.transactions_handlers import (
+    get_address,
+    get_balance,
+)
+
 from bookbnb_middleware.constants import (
     LOGIN_URL,
     LOGOUT_URL,
@@ -75,10 +80,22 @@ def list_users(params):
     return r.json(), r.status_code
 
 
-def get_user_profile(user_id):
+def get_user_data(user_id):
     url = USERS_URL + "/" + str(user_id)
-    r = requests.get(url)
-    return r.json(), r.status_code
+    user_profile_req = requests.get(url)
+    if user_profile_req.status_code != 200:
+        return user_profile_req.json(), user_profile_req.status_code
+
+    user_address_data, status_code = get_address(user_id)
+    user_balance_data, status_code = get_balance(user_address_data["address"])
+    if status_code != 200:
+        return user_balance_data, status_code
+
+    res = user_profile_req.json()
+    res.update(user_address_data)
+    res.update(user_balance_data)
+
+    return res, 200
 
 
 def edit_user_profile(user_id, payload):

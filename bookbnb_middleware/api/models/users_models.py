@@ -78,6 +78,19 @@ profile_model = base_user_model.clone(
     {"register_date": fields.DateTime(description="The date the user joined bookbnb")},
 )
 
+user_data_model = base_user_model.clone(
+    "User data model",
+    {
+        "register_date": fields.DateTime(
+            description="The date the user joined bookbnb"
+        ),
+        "address": fields.String(description="The wallet address"),
+        "ETH": fields.Float(description="Balance of the wallet (in ETH)"),
+        "USD": fields.Float(description="Balance of the wallet (in USD)"),
+        "EUR": fields.Float(description="Balance of the wallet (in EUR)"),
+    },
+)
+
 register_model = base_user_model.clone(
     "User register model",
     {

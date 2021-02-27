@@ -6,7 +6,7 @@ from flask_restx import Namespace, Resource
 from bookbnb_middleware.api.handlers.users_handlers import (
     edit_user_profile,
     block_user,
-    get_user_profile,
+    get_user_data,
     list_users,
     login,
     logout,
@@ -26,6 +26,7 @@ from bookbnb_middleware.api.models.users_models import (
     registered_model,
     success_model,
     user_parser,
+    user_data_model,
 )
 
 log = logging.getLogger(__name__)
@@ -45,6 +46,7 @@ ns.models[profile_model.name] = profile_model
 ns.models[register_model.name] = register_model
 ns.models[registered_model.name] = registered_model
 ns.models[success_model.name] = success_model
+ns.models[user_data_model.name] = user_data_model
 ns.models[error_model.name] = error_model
 
 
@@ -116,18 +118,22 @@ class ResetPasswordResource(Resource):
 
 @ns.route("/<int:user_id>")
 @ns.param("user_id", "The user unique identifier")
-@ns.response(code=200, model=profile_model, description="Success")
-@ns.response(code=404, model=error_model, description="User not found")
-@ns.response(code=403, model=error_model, description="User is blocked")
 class UserById(Resource):
+    @ns.response(code=200, model=user_data_model, description="Success")
+    @ns.response(code=400, model=error_model, description="Bad request")
+    @ns.response(code=404, model=error_model, description="User not found")
+    @ns.response(code=403, model=error_model, description="User is blocked")
     def get(self, user_id):
         """
         Get a user by id.
         """
-        res, status_code = get_user_profile(user_id)
+        res, status_code = get_user_data(user_id)
         return res, status_code
 
     @ns.expect(edit_model)
+    @ns.response(code=200, model=profile_model, description="Success")
+    @ns.response(code=404, model=error_model, description="User not found")
+    @ns.response(code=403, model=error_model, description="User is blocked")
     def put(self, user_id):
         """
         Replace a user by id.
@@ -135,6 +141,9 @@ class UserById(Resource):
         res, status_code = edit_user_profile(user_id, request.json)
         return res, status_code
 
+    @ns.response(code=200, model=profile_model, description="Success")
+    @ns.response(code=404, model=error_model, description="User not found")
+    @ns.response(code=403, model=error_model, description="User is blocked")
     def delete(self, user_id):
         """
         Block a user by id.
