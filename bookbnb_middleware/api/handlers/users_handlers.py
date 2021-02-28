@@ -9,8 +9,6 @@ from bookbnb_middleware.api.handlers.transactions_handlers import (
 )
 
 from bookbnb_middleware.constants import (
-    LOGIN_URL,
-    LOGOUT_URL,
     NOTIFICATIONS_URL,
     PAYMENTS_URL,
     USERS_URL,
@@ -23,7 +21,7 @@ def login(payload):
 
     login_payload = {"email": payload["email"], "password": payload["password"]}
     login_req = requests.post(
-        LOGIN_URL, data=json.dumps(login_payload), headers=headers
+        USERS_URL + '/login', data=json.dumps(login_payload), headers=headers
     )
 
     if login_req.status_code != 201:
@@ -51,7 +49,7 @@ def login(payload):
 def logout(auth_token):
     h = headers
     h["Authorization"] = auth_token
-    r = requests.post(LOGOUT_URL, headers=h)
+    r = requests.post(USERS_URL + '/logout', headers=h)
     return r.json(), r.status_code
 
 

@@ -1,9 +1,9 @@
 from enum import Enum
 
 # Microservices URIs
-LOGIN_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users/login"
-LOGOUT_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users/logout"
 USERS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users"
+ADMINS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/admins"
+ADMINS_LOGIN_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/admins"
 OAUTH_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/oauth"
 TOKEN_VALIDATOR_URL = (
     "https://bookbnb5-users-microservice.herokuapp.com/v1/users/validate_token"
