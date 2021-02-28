@@ -5,8 +5,11 @@ USERS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users"
 ADMINS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/admins"
 ADMINS_LOGIN_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/admins"
 OAUTH_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/oauth"
-TOKEN_VALIDATOR_URL = (
+USER_TOKEN_VALIDATOR_URL = (
     "https://bookbnb5-users-microservice.herokuapp.com/v1/users/validate_token"
+)
+ADMIN_TOKEN_VALIDATOR_URL = (
+    "https://bookbnb5-users-microservice.herokuapp.com/v1/admins/validate_token"
 )
 PUBLICATIONS_URL = "https://bookbnb5-publications.herokuapp.com/v1/publications"
 BOOKINGS_URL = "https://bookbnb5-bookings.herokuapp.com/v1/bookings"
