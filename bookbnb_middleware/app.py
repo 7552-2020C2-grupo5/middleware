@@ -40,6 +40,7 @@ def validate_authorization():
         "/swaggerui/swagger-ui.css",
         "/swaggerui/droid-sans.css",
     ]
+    log.info(request.path)
     if request.path not in excluded_paths and request.method != "OPTIONS":
         parser_args = auth_model.parse_args()
         auth_token = parser_args.Authorization
