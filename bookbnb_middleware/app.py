@@ -25,12 +25,13 @@ log.setLevel(logging.INFO)
 AUTH_TOKEN = os.getenv("AUTH", "AUTH_FAKE")
 
 
-def before_request():
+def validate_authorization():
     excluded_paths = [
         "/",
         "/swaggerui/favicon-32x32.png",
         "/swagger.json",
         "/bookbnb/users/login",
+        "/bookbnb/users/",
         "/bookbnb/admins/login",
         "/bookbnb/oauth/login",
         "/swaggerui/swagger-ui-standalone-preset.js",
@@ -67,5 +68,5 @@ def create_app():
         new_app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1
     )
     CORS(new_app, resources={r"/*": {"origins": "*"}})
-    new_app.before_request(before_request)
+    new_app.before_request(validate_authorization)
     return new_app
