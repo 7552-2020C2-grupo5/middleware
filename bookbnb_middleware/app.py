@@ -1,5 +1,5 @@
 import logging.config
-
+import os
 from decouple import config as config_decouple
 from flask import Flask, request
 from flask_cors import CORS
@@ -21,6 +21,8 @@ if config_decouple("PRODUCTION", default=False):
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
+
+AUTH_TOKEN = os.getenv("AUTH", "AUTH_FAKE")
 
 
 def before_request():
@@ -46,7 +48,7 @@ def before_request():
         if (
             r_user.status_code != 200
             and r_admin.status_code != 200
-            and auth_token != "AUTH_FAKE"
+            and auth_token != AUTH_TOKEN
         ):
             return r_user.json(), r_user.status_code
 
