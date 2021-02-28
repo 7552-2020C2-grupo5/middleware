@@ -30,10 +30,3 @@ def login(params):
 
     login_req = requests.post(OAUTH_URL + "/login", params=params)
     return login_req.json(), login_req.status_code
-
-
-def logout(auth_token):
-    h = headers
-    h["Authorization"] = auth_token
-    r = requests.post(OAUTH_URL + "/logout", headers=h)
-    return r.json(), r.status_code
