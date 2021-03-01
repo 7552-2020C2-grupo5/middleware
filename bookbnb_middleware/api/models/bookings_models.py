@@ -37,6 +37,9 @@ accept_booking_model = Model(
         "tenant_id": fields.Integer(
             required=True, description="The unique identifier of the tenant"
         ),
+        "owner_id": fields.Integer(
+            required=True, description="The unique identifier of the publication owner"
+        ),
         "booking_id": fields.Integer(
             required=True, description="The id of the booking"
         ),

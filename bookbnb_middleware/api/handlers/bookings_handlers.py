@@ -3,7 +3,12 @@ import json
 
 import requests
 
-from bookbnb_middleware.constants import BOOKINGS_URL, PAYMENTS_URL, USERS_URL
+from bookbnb_middleware.constants import (
+    BOOKINGS_URL,
+    PAYMENTS_URL,
+    USERS_URL,
+    NOTIFICATIONS_URL,
+)
 
 headers = {"content-type": "application/json"}
 
@@ -94,6 +99,8 @@ def accept_booking(payload):
     tenant_id = payload["tenant_id"]
     publication_owner_mnemonic = payload["publication_owner_mnemonic"]
     booking_id = payload["booking_id"]
+    owner_id = payload["owner_id"]
+    final_date = payload["final_date"]
 
     get_wallet_req = requests.get(USERS_URL + "/wallet/" + str(tenant_id))
     tenant_address = get_wallet_req.json()["address"]
@@ -116,17 +123,48 @@ def accept_booking(payload):
     if accept_req.status_code == 500:
         return accept_req.json(), 400
 
-    # owner_scheduled_notif_payload = {
-    #    "to": ,
-    #    "type": "hostReview",
-    #    "at":
-    # }
+    publication_id = requests.patch(
+        BOOKINGS_URL + "/" + str(booking_id),
+        data=json.dumps({}),
+        headers=headers,
+    ).json()["publication_id"]
 
-    # booker_scheduled_notif_payload = {
-    #    "type": "publicationReview"
-    # }
+    send_scheduled_notifications(publication_id, tenant_id, owner_id, final_date)
 
     return accept_req.json(), accept_req.status_code
+
+
+def send_scheduled_notifications(publication_id, tenant_id, owner_id, booking_end_date):
+
+    booking_end_date += "T00:00:00.000Z"
+
+    url = NOTIFICATIONS_URL + "/scheduled_notifications"
+
+    tenant_notification_data = {
+        "type": "publicationReview",
+        "publication_id": publication_id,
+    }
+
+    tenant_notification_body = {
+        "to": tenant_id,
+        "title": "Califica la publicación que reservaste",
+        "body": "Clickea acá para calificarla",
+        "data": tenant_notification_data,
+        "at": booking_end_date,
+    }
+
+    owner_notification_data = {"type": "hostReview", "user_id": tenant_id}
+
+    owner_notification_body = {
+        "to": owner_id,
+        "title": "Califica al huesped de tu publicación",
+        "body": "Clickea acá para calificarlo",
+        "data": owner_notification_data,
+        "at": booking_end_date,
+    }
+
+    requests.post(url, data=json.dumps(tenant_notification_body), headers=headers)
+    requests.post(url, data=json.dumps(owner_notification_body), headers=headers)
 
 
 def reject_booking(payload):
