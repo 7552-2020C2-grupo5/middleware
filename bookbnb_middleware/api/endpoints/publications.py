@@ -15,6 +15,7 @@ from bookbnb_middleware.api.handlers.publications_handlers import (
 )
 from bookbnb_middleware.api.models.publications_models import (
     base_publication_model,
+    date_range_model,
     error_model,
     filter_model,
     loc_model,
@@ -22,6 +23,7 @@ from bookbnb_middleware.api.models.publications_models import (
     new_star_model,
     publication_image_model,
     publication_model,
+    get_publication_model,
     publication_question_model,
     publication_star_parser,
     publication_star_uid_parser,
@@ -36,6 +38,7 @@ ns = Namespace(
 )
 
 ns.models[base_publication_model.name] = base_publication_model
+ns.models[get_publication_model.name] = get_publication_model
 ns.models[error_model.name] = error_model
 ns.models[new_publication_model.name] = new_publication_model
 ns.models[new_star_model.name] = new_star_model
@@ -43,6 +46,7 @@ ns.models[publication_model.name] = publication_model
 ns.models[publication_image_model.name] = publication_image_model
 ns.models[loc_model.name] = loc_model
 ns.models[publication_question_model.name] = publication_question_model
+ns.models[date_range_model.name] = date_range_model
 
 
 @ns.route("/")
@@ -71,7 +75,7 @@ class PublicationsResource(Resource):
 @ns.route("/<int:publication_id>")
 @ns.param("publication_id", "The publication unique identifier")
 class PublicationResource(Resource):
-    @ns.response(code=200, model=publication_model, description="Success")
+    @ns.response(code=200, model=get_publication_model, description="Success")
     @ns.response(code=404, model=error_model, description="Publication not found")
     @ns.response(
         code=403, model=error_model, description="Publication has been blocked"

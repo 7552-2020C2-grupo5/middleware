@@ -90,7 +90,23 @@ def list_publications(params):
 def get_publication(publication_id):
     url = PUBLICATIONS_URL + "/" + str(publication_id)
     r = requests.get(url)
-    return r.json(), r.status_code
+    if r.status_code != 200:
+        return r.json(), r.status_code
+
+    params = {"publication_id": publication_id, "blockchain_status": "CONFIRMED"}
+    bookings = requests.get(BOOKINGS_URL, params=params).json()
+    bookings_dates = []
+    for booking in bookings:
+        booking_date = {
+            "initial_date": booking["initial_date"],
+            "final_date": booking["final_date"],
+        }
+        bookings_dates.append(booking_date)
+
+    resp = r.json()
+    resp["bookings_dates"] = bookings_dates
+
+    return resp, r.status_code
 
 
 def replace_publication(publication_id, payload):

@@ -102,6 +102,24 @@ publication_model = base_publication_model.inherit(
     },
 )
 
+date_range_model = Model(
+    "Date Range Model",
+    {
+        "initial_date": fields.DateTime(description="Initial date of the booking"),
+        "final_date": fields.DateTime(description="Final date of the booking"),
+    },
+)
+
+get_publication_model = publication_model.inherit(
+    "Get Publication Model",
+    {
+        "bookings_dates": fields.List(
+            fields.Nested(date_range_model),
+            description="Bookings dates of the publication",
+        ),
+    },
+)
+
 filter_model = reqparse.RequestParser()
 filter_model.add_argument(
     "bathrooms",
