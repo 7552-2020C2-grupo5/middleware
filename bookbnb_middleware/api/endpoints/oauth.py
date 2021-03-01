@@ -25,7 +25,6 @@ ns.models[login_model.name] = login_model
 @ns.route("/login")
 class OAuthLogin(Resource):
     @ns.doc('oauth_login')
-    # @ns.doc(parser=oauth_token_parser, body=login_model)
     @ns.expect(oauth_token_parser, login_model)
     @ns.response(code=201, description="Success")
     @ns.response(code=401, model=error_model, description="Invalid credentials")
