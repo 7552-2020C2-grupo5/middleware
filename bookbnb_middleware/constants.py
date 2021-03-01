@@ -1,6 +1,5 @@
 from enum import Enum
 
-# Microservices URIs
 USERS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users"
 ADMINS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/admins"
 ADMINS_LOGIN_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/admins"
@@ -22,6 +21,8 @@ PUBLICATION_REVIEWS_URL = (
 CRYPTOCOMPARE_URL = (
     "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,EUR"
 )
+BOOKINGS_METRICS_URL = "https://bookbnb5-bookings.herokuapp.com/v1/metrics"
+USERS_METRICS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/metrics"
 
 
 class BlockChainStatus(Enum):
