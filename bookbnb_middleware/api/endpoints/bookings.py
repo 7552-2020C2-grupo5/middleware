@@ -4,6 +4,7 @@ from flask import request
 from flask_restx import Namespace, Resource
 
 from bookbnb_middleware.api.handlers.bookings_handlers import (
+    get_booking_by_id,
     accept_booking,
     create_intent_book,
     list_bookings,
@@ -82,4 +83,17 @@ class RejectBookingResource(Resource):
         Reject a booking.
         """
         res, status_code = reject_booking(request.json)
+        return res, status_code
+
+
+@ns.route("/<int:booking_id>")
+@ns.param("booking_id", "The booking unique identifier")
+class BookingResource(Resource):
+    @ns.response(code=200, model=booking_model, description="Success")
+    @ns.response(code=404, model=error_model, description="Booking not found")
+    def get(self, booking_id):
+        """
+        Get booking by id.
+        """
+        res, status_code = get_booking_by_id(booking_id)
         return res, status_code

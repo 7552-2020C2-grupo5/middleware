@@ -123,11 +123,9 @@ def accept_booking(payload):
     if accept_req.status_code == 500:
         return accept_req.json(), 400
 
-    publication_id = requests.patch(
-        BOOKINGS_URL + "/" + str(booking_id),
-        data=json.dumps({}),
-        headers=headers,
-    ).json()["publication_id"]
+    publication_id = requests.get(BOOKINGS_URL + "/" + str(booking_id)).json()[
+        "publication_id"
+    ]
 
     send_scheduled_notifications(publication_id, tenant_id, owner_id, final_date)
 
@@ -195,3 +193,8 @@ def reject_booking(payload):
         return reject_req.json(), 400
 
     return reject_req.json(), reject_req.status_code
+
+
+def get_booking_by_id(booking_id):
+    r = requests.get(BOOKINGS_URL + "/" + str(booking_id))
+    return r.json(), r.status_code
