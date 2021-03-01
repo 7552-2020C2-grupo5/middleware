@@ -1,11 +1,13 @@
 import logging
 
+from flask import request
 from flask_restx import Namespace, Resource
 
 from bookbnb_middleware.api.handlers.oauth_handlers import login
 from bookbnb_middleware.api.models.oauth_models import (
     oauth_token_parser,
     error_model,
+    login_model,
 )
 
 log = logging.getLogger(__name__)
@@ -17,12 +19,14 @@ ns = Namespace(
 )
 
 ns.models[error_model.name] = error_model
+ns.models[login_model.name] = login_model
 
 
 @ns.route("/login")
 class OAuthLogin(Resource):
     @ns.doc('oauth_login')
-    @ns.expect(oauth_token_parser)
+    # @ns.doc(parser=oauth_token_parser, body=login_model)
+    @ns.expect(oauth_token_parser, login_model)
     @ns.response(code=201, description="Success")
     @ns.response(code=401, model=error_model, description="Invalid credentials")
     @ns.response(code=400, model=error_model, description="Token malformed")
@@ -33,5 +37,5 @@ class OAuthLogin(Resource):
         """
         OAuth Login
         """
-        res, status_code = login(oauth_token_parser.parse_args())
+        res, status_code = login(oauth_token_parser.parse_args(), request.json)
         return res, status_code
