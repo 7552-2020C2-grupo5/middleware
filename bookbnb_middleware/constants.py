@@ -31,3 +31,6 @@ class BlockChainStatus(Enum):
     DENIED = "DENIED"
     PENDING = "PENDING"
     ERROR = "ERROR"
+
+
+BOOKBNB_TOKEN = "bookbnb_token"

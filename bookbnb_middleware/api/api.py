@@ -15,6 +15,7 @@ from bookbnb_middleware.api.endpoints.users_reviews import ns as users_reviews_n
 from bookbnb_middleware.api.endpoints.oauth import ns as oauth_namespace
 from bookbnb_middleware.api.endpoints.admins import ns as admins_namespace
 from bookbnb_middleware.api.endpoints.metrics import ns as metrics_namespace
+from bookbnb_middleware.api.endpoints.tokens import ns as tokens_namespace
 
 log = logging.getLogger(__name__)
 
@@ -34,6 +35,7 @@ api.add_namespace(users_namespace)
 api.add_namespace(oauth_namespace)
 api.add_namespace(admins_namespace)
 api.add_namespace(metrics_namespace)
+api.add_namespace(tokens_namespace)
 
 
 @api.errorhandler

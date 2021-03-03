@@ -32,6 +32,7 @@ def validate_authorization():
         "/swagger.json",
         "/bookbnb/users/login",
         "/bookbnb/users/",
+        "/bookbnb/token",
         "/bookbnb/admins/login",
         "/bookbnb/oauth/login",
         "/swaggerui/swagger-ui-standalone-preset.js",
