@@ -57,7 +57,7 @@ def remove_env_var(key):
         raise InvalidEnvironment
     try:
         env_vars = get_env_vars()
-        env_vars.pop(key)
+        env_vars.pop(key.upper())
         _patch_env_vars(env_vars)
     except KeyError as e:
         raise UnsetServerToken from e
