@@ -1,6 +1,6 @@
 import base64
 import json
-
+import os
 import requests
 
 from bookbnb_middleware.api.handlers.transactions_handlers import (
@@ -12,6 +12,7 @@ from bookbnb_middleware.constants import (
     NOTIFICATIONS_URL,
     PAYMENTS_URL,
     USERS_URL,
+    BOOKBNB_TOKEN,
 )
 
 headers = {"content-type": "application/json"}
@@ -74,7 +75,8 @@ def reset_password(payload):
 
 
 def list_users(params):
-    r = requests.get(USERS_URL, params=params)
+    h = {"BookBNB-Authorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    r = requests.get(USERS_URL, params=params, headers=h)
     return r.json(), r.status_code
 
 
