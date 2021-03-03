@@ -31,7 +31,7 @@ def validate_authorization():
         "/swaggerui/favicon-32x32.png",
         "/swagger.json",
         "/bookbnb/users/login",
-        "/bookbnb/users/",
+        "/bookbnb/users/",  # todo sacar esto
         "/bookbnb/token",
         "/bookbnb/admins/login",
         "/bookbnb/oauth/login",

@@ -76,6 +76,7 @@ def reset_password(payload):
 
 def list_users(params):
     h = {"BookBNB-Authorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    print(h)
     r = requests.get(USERS_URL, params=params, headers=h)
     return r.json(), r.status_code
 
