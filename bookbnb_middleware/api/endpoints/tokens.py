@@ -2,11 +2,7 @@ from flask_restx import Namespace, Resource
 
 from bookbnb_middleware.constants import BOOKBNB_TOKEN
 from bookbnb_middleware.api.models.tokens_models import server_token_model, error_model
-from bookbnb_middleware.exceptions import (
-    InvalidEnvironment,
-    ServerTokenError,
-    UnsetServerToken,
-)
+from bookbnb_middleware.exceptions import InvalidEnvironment, ServerTokenError
 
 from bookbnb_middleware.api.handlers.tokens_handlers import add_env_var, remove_env_var
 
@@ -40,7 +36,6 @@ class ServerTokenResource(Resource):
             return {"message": f"{e}"}, 500
 
     @ns.response(200, "Server token removed")
-    @ns.response(code=400, model=error_model, description="Error when removing")
     @ns.response(code=403, model=error_model, description="Invalid environment")
     @ns.response(code=500, model=error_model, description="Error processing request")
     @ns.doc('remove_server_token')
@@ -51,8 +46,6 @@ class ServerTokenResource(Resource):
             return {"message": "success"}, 200
         except InvalidEnvironment:
             return {"message": "Invalid environment"}, 403
-        except UnsetServerToken:
-            return {"message": "server token was not set"}, 400
         except ServerTokenError as e:
             ns.logger.error("Error deleting server token", exc_info=e)
             return {"message": "Internal error"}, 500
