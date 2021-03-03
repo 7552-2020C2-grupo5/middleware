@@ -26,7 +26,7 @@ ns.models[error_model.name] = error_model
 @ns.route("")
 class MetricsResource(Resource):
     @ns.expect(metrics_parser)
-    @ns.response(code=400, model=error_model, description="Unexpected error")
+    @ns.response(code=400, description="Unexpected error")
     @ns.marshal_list_with(metric_model)
     def get(self):
         """

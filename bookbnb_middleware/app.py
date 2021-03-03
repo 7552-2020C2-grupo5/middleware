@@ -30,16 +30,15 @@ def validate_authorization():
         "/",
         "/swaggerui/favicon-32x32.png",
         "/swagger.json",
-        "/bookbnb/users/login",
-        "/bookbnb/users/",  # todo sacar esto
-        "/bookbnb/token",
-        "/bookbnb/admins/login",
-        "/bookbnb/oauth/login",
         "/swaggerui/swagger-ui-standalone-preset.js",
         "/swaggerui/swagger-ui-standalone-preset.js",
         "/swaggerui/swagger-ui-bundle.js",
         "/swaggerui/swagger-ui.css",
         "/swaggerui/droid-sans.css",
+        "/bookbnb/users/login",
+        "/bookbnb/token",
+        "/bookbnb/admins/login",
+        "/bookbnb/oauth/login",
     ]
     log.info(request.path)
     if request.path not in excluded_paths and request.method != "OPTIONS":

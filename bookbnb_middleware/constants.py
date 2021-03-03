@@ -2,7 +2,6 @@ from enum import Enum
 
 USERS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/users"
 ADMINS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/admins"
-ADMINS_LOGIN_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/admins"
 OAUTH_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/oauth"
 USER_TOKEN_VALIDATOR_URL = (
     "https://bookbnb5-users-microservice.herokuapp.com/v1/users/validate_token"
@@ -21,8 +20,12 @@ PUBLICATION_REVIEWS_URL = (
 CRYPTOCOMPARE_URL = (
     "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,EUR"
 )
+
 BOOKINGS_METRICS_URL = "https://bookbnb5-bookings.herokuapp.com/v1/metrics"
 USERS_METRICS_URL = "https://bookbnb5-users-microservice.herokuapp.com/v1/metrics"
+PUBLICATIONS_METRICS_URL = "https://bookbnb5-publications.herokuapp.com/v1/metrics"
+
+BOOKBNB_TOKEN = "bookbnb_token"
 
 
 class BlockChainStatus(Enum):
@@ -31,6 +34,3 @@ class BlockChainStatus(Enum):
     DENIED = "DENIED"
     PENDING = "PENDING"
     ERROR = "ERROR"
-
-
-BOOKBNB_TOKEN = "bookbnb_token"
