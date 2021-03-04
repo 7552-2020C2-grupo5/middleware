@@ -68,8 +68,10 @@ def register(payload):
 
 
 def reset_password(payload):
+    h = {"BookBNBAuthorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    h.update(headers)
     r = requests.post(
-        USERS_URL + "/reset_password", data=json.dumps(payload), headers=headers
+        USERS_URL + "/reset_password", data=json.dumps(payload), headers=h
     )
     return r.json(), r.status_code
 
@@ -81,8 +83,9 @@ def list_users(params):
 
 
 def get_user_data(user_id):
-    url = USERS_URL + "/" + str(user_id)
-    user_profile_req = requests.get(url)
+    h = {"BookBNBAuthorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    user_profile_req = requests.get(USERS_URL + "/" + str(user_id), headers=h)
+
     if user_profile_req.status_code != 200:
         return user_profile_req.json(), user_profile_req.status_code
 
@@ -99,12 +102,15 @@ def get_user_data(user_id):
 
 
 def edit_user_profile(user_id, payload):
-    url = USERS_URL + "/" + str(user_id)
-    r = requests.put(url, data=json.dumps(payload), headers=headers)
+    h = {"BookBNBAuthorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    h.update(headers)
+    r = requests.put(
+        USERS_URL + "/" + str(user_id), data=json.dumps(payload), headers=h
+    )
     return r.json(), r.status_code
 
 
 def block_user(user_id):
-    url = USERS_URL + "/" + str(user_id)
-    r = requests.delete(url)
+    h = {"BookBNBAuthorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    r = requests.delete(url=USERS_URL + "/" + str(user_id), headers=h)
     return r.json(), r.status_code
