@@ -4,6 +4,7 @@ import json
 import requests
 
 from bookbnb_middleware.constants import BOOKINGS_URL, PAYMENTS_URL, PUBLICATIONS_URL
+from bookbnb_middleware.utils import get_sv_auth_headers
 
 headers = {"content-type": "application/json"}
 
@@ -16,7 +17,9 @@ def create_publication(payload):
     mnemonic = payload["mnemonic"]
 
     payload.pop("mnemonic")
-    r = requests.post(PUBLICATIONS_URL, data=json.dumps(payload), headers=headers)
+    h = get_sv_auth_headers()
+    h.update(headers)
+    r = requests.post(PUBLICATIONS_URL, data=json.dumps(payload), headers=h)
     if r.status_code != 200:
         return r.json(), r.status_code
 
@@ -32,24 +35,27 @@ def create_publication(payload):
         PAYMENTS_URL + "/room", data=json.dumps(d), headers=headers
     )
     if payments_req.status_code == 500:
-        requests.delete(PUBLICATIONS_URL + "/" + str(publication_id))
+        requests.delete(PUBLICATIONS_URL + "/" + str(publication_id), headers=h)
         return payments_req.json(), 400
 
     patch_payload = {
         "blockchain_transaction_hash": payments_req.json()["transaction_hash"]
     }
+
     r = requests.patch(
         PUBLICATIONS_URL + "/" + str(publication_id),
         data=json.dumps(patch_payload),
-        headers=headers,
+        headers=h,
     )
 
     return r.json(), r.status_code
 
 
 def list_publications(params):
+    h = get_sv_auth_headers()
+
     if not params["initial_date"] and not params["final_date"]:
-        r = requests.get(PUBLICATIONS_URL, params=params)
+        r = requests.get(PUBLICATIONS_URL, params=params, headers=h)
         return r.json(), r.status_code
 
     initial_date = params["initial_date"]
@@ -67,7 +73,7 @@ def list_publications(params):
         "final_date": final_date,
         "blockchain_status": "CONFIRMED",
     }
-    bookings = requests.get(BOOKINGS_URL, params=params_bookings).json()
+    bookings = requests.get(BOOKINGS_URL, params=params_bookings, headers=h).json()
 
     pub_ids_not_available = []
     for booking in bookings:
@@ -77,7 +83,7 @@ def list_publications(params):
 
     params.pop("initial_date")
     params.pop("final_date")
-    publications = requests.get(PUBLICATIONS_URL, params=params).json()
+    publications = requests.get(PUBLICATIONS_URL, params=params, headers=h).json()
 
     available_publications = []
     for publication in publications:
@@ -88,13 +94,15 @@ def list_publications(params):
 
 
 def get_publication(publication_id):
+    h = get_sv_auth_headers()
+
     url = PUBLICATIONS_URL + "/" + str(publication_id)
-    r = requests.get(url)
+    r = requests.get(url, headers=h)
     if r.status_code != 200:
         return r.json(), r.status_code
 
     params = {"publication_id": publication_id, "blockchain_status": "CONFIRMED"}
-    bookings = requests.get(BOOKINGS_URL, params=params).json()
+    bookings = requests.get(BOOKINGS_URL, params=params, headers=h).json()
     bookings_dates = []
     for booking in bookings:
         booking_date = {
@@ -135,29 +143,35 @@ def replace_publication(publication_id, payload):
 
     payload.pop("mnemonic")
     url = PUBLICATIONS_URL + "/" + str(publication_id)
-    r = requests.put(url, data=json.dumps(payload), headers=headers)
+    h = get_sv_auth_headers()
+    h.update(headers)
+    r = requests.put(url, data=json.dumps(payload), headers=h)
     return r.json(), r.status_code
 
 
 def block_publication(publication_id):
+    h = get_sv_auth_headers()
     url = PUBLICATIONS_URL + "/" + str(publication_id)
-    r = requests.delete(url)
+    r = requests.delete(url, headers=h)
     return r.json(), r.status_code
 
 
 def star_publication(params, publication_id):
+    h = get_sv_auth_headers()
     url = PUBLICATIONS_URL + "/" + str(publication_id) + "/star"
-    r = requests.post(url, params=params)
+    r = requests.post(url, params=params, headers=h)
     return r.json(), r.status_code
 
 
 def unstar_publication(params, publication_id):
+    h = get_sv_auth_headers()
     url = PUBLICATIONS_URL + "/" + str(publication_id) + "/star"
-    r = requests.delete(url, params=params)
+    r = requests.delete(url, params=params, headers=h)
     return r.json(), r.status_code
 
 
 def get_starrings(params, publication_id):
+    h = get_sv_auth_headers()
     url = PUBLICATIONS_URL + "/" + str(publication_id) + "/star"
-    r = requests.get(url, params=params)
+    r = requests.get(url, params=params, headers=h)
     return r.json(), r.status_code
