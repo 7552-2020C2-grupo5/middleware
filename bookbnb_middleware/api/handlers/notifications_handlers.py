@@ -3,11 +3,14 @@ import json
 import requests
 
 from bookbnb_middleware.constants import NOTIFICATIONS_URL
+from bookbnb_middleware.utils import get_sv_auth_headers
 
 headers = {"content-type": "application/json"}
 
 
 def create_instant_notification(payload):
+    h = get_sv_auth_headers()
+    h.update(headers)
     url = NOTIFICATIONS_URL + "/notifications"
 
     notifications_payload_body = {
@@ -22,5 +25,5 @@ def create_instant_notification(payload):
         "data": notifications_payload_body,
     }
 
-    r = requests.post(url, data=json.dumps(notifications_payload), headers=headers)
+    r = requests.post(url, data=json.dumps(notifications_payload), headers=h)
     return r.json(), r.status_code
