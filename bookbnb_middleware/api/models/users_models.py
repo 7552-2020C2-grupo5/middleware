@@ -37,6 +37,7 @@ user_parser.add_argument(
     help="Email to filter on",
     store_missing=False,
 )
+user_parser.add_argument("filter_blocked", type=bool, help="Filter blocked users")
 
 logged_out_model = Model(
     "User logged out model",
@@ -75,7 +76,12 @@ base_user_model = Model(
 
 profile_model = base_user_model.clone(
     "User profile model",
-    {"register_date": fields.DateTime(description="The date the user joined bookbnb")},
+    {
+        "register_date": fields.DateTime(
+            description="The date the user joined bookbnb"
+        ),
+        "blocked": fields.Boolean(description="User is blocked"),
+    },
 )
 
 user_data_model = base_user_model.clone(
