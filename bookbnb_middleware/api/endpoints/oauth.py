@@ -27,8 +27,10 @@ class OAuthLogin(Resource):
     @ns.doc("oauth_login")
     @ns.expect(oauth_token_parser, login_model)
     @ns.response(code=201, description="Success")
-    @ns.response(code=401, model=error_model, description="Invalid credentials")
-    @ns.response(code=403, model=error_model, description="User is blocked")
+    @ns.response(
+        code=401, model=error_model, description="Invalid credentials or blocked user"
+    )
+    # @ns.response(code=403, model=error_model, description="User is blocked")
     @ns.response(code=400, model=error_model, description="Token malformed")
     @ns.response(
         code=503, model=error_model, description="Service currently unavailable"
@@ -38,4 +40,6 @@ class OAuthLogin(Resource):
         OAuth Login
         """
         res, status_code = login(oauth_token_parser.parse_args(), request.json)
+        if status_code == 403:
+            status_code = 401  # TODO: avoid this to force session expiration in app
         return res, status_code
