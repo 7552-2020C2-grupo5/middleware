@@ -59,7 +59,12 @@ def validate_authorization():
             and r_admin.status_code != 200
             and auth_token != AUTH_TOKEN
         ):
-            return r_user.json(), r_user.status_code
+            ret, status_code = r_user.json(), r_user.status_code
+            if status_code == 403:
+                status_code = (
+                    401  # TODO: remove this to force token expiration on the app
+                )
+            return ret, status_code
 
 
 def create_app():
