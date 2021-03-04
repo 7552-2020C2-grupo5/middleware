@@ -74,7 +74,7 @@ def create_intent_book(payload):
     create_intent_book_req = requests.post(
         PAYMENTS_URL + "/bookings",
         data=json.dumps(intent_book_payload),
-        headers=h,
+        headers=headers,
     )
     if create_intent_book_req.status_code == 500:
         bookings_patch_payload = {"blockchain_status": "ERROR"}
