@@ -1,6 +1,5 @@
 import base64
 import json
-import os
 import requests
 
 from bookbnb_middleware.api.handlers.transactions_handlers import (
@@ -8,21 +7,20 @@ from bookbnb_middleware.api.handlers.transactions_handlers import (
     get_balance,
 )
 
-from bookbnb_middleware.constants import (
-    NOTIFICATIONS_URL,
-    PAYMENTS_URL,
-    USERS_URL,
-    BOOKBNB_TOKEN,
-)
+from bookbnb_middleware.constants import NOTIFICATIONS_URL, PAYMENTS_URL, USERS_URL
+
+from bookbnb_middleware.utils import get_sv_auth_headers
 
 headers = {"content-type": "application/json"}
 
 
 def login(payload):
+    h = get_sv_auth_headers()
+    h.update(headers)
 
     login_payload = {"email": payload["email"], "password": payload["password"]}
     login_req = requests.post(
-        USERS_URL + '/login', data=json.dumps(login_payload), headers=headers
+        USERS_URL + '/login', data=json.dumps(login_payload), headers=h
     )
 
     if login_req.status_code != 201:
@@ -41,7 +39,7 @@ def login(payload):
     requests.put(
         NOTIFICATIONS_URL + "/user_token",
         data=json.dumps(push_token_payload),
-        headers=headers,
+        headers=h,
     )
 
     return login_req.json(), login_req.status_code
@@ -50,6 +48,7 @@ def login(payload):
 def logout(auth_token):
     h = headers
     h["Authorization"] = auth_token
+    h.update(get_sv_auth_headers())
     r = requests.post(USERS_URL + '/logout', headers=h)
     return r.json(), r.status_code
 
@@ -63,12 +62,14 @@ def register(payload):
     payload["wallet_address"] = wallet_info["address"]
     payload["wallet_mnemonic"] = wallet_info["mnemonic"]
 
-    r = requests.post(USERS_URL, data=json.dumps(payload), headers=headers)
+    h = get_sv_auth_headers()
+    h.update(headers)
+    r = requests.post(USERS_URL, data=json.dumps(payload), headers=h)
     return r.json(), r.status_code
 
 
 def reset_password(payload):
-    h = {"BookBNBAuthorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    h = get_sv_auth_headers()
     h.update(headers)
     r = requests.post(
         USERS_URL + "/reset_password", data=json.dumps(payload), headers=h
@@ -77,13 +78,13 @@ def reset_password(payload):
 
 
 def list_users(params):
-    h = {"BookBNBAuthorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    h = get_sv_auth_headers()
     r = requests.get(USERS_URL, params=params, headers=h)
     return r.json(), r.status_code
 
 
 def get_user_data(user_id):
-    h = {"BookBNBAuthorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    h = get_sv_auth_headers()
     user_profile_req = requests.get(USERS_URL + "/" + str(user_id), headers=h)
 
     if user_profile_req.status_code != 200:
@@ -102,7 +103,7 @@ def get_user_data(user_id):
 
 
 def edit_user_profile(user_id, payload):
-    h = {"BookBNBAuthorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    h = get_sv_auth_headers()
     h.update(headers)
     r = requests.put(
         USERS_URL + "/" + str(user_id), data=json.dumps(payload), headers=h
@@ -111,6 +112,6 @@ def edit_user_profile(user_id, payload):
 
 
 def block_user(user_id):
-    h = {"BookBNBAuthorization": os.getenv(BOOKBNB_TOKEN.upper(), "_")}
+    h = get_sv_auth_headers()
     r = requests.delete(url=USERS_URL + "/" + str(user_id), headers=h)
     return r.json(), r.status_code
