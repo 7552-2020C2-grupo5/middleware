@@ -4,14 +4,14 @@ from flask import request
 from flask_restx import Namespace, Resource
 
 from bookbnb_middleware.api.handlers.users_handlers import (
-    block_user,
     edit_user_profile,
+    block_user,
     get_user_data,
     list_users,
     login,
     logout,
     register,
-    reset_password
+    reset_password,
 )
 from bookbnb_middleware.api.models.users_models import (
     auth_model,
@@ -25,8 +25,8 @@ from bookbnb_middleware.api.models.users_models import (
     register_model,
     registered_model,
     success_model,
+    user_parser,
     user_data_model,
-    user_parser
 )
 
 log = logging.getLogger(__name__)
@@ -54,20 +54,14 @@ ns.models[error_model.name] = error_model
 class Login(Resource):
     @ns.expect(login_model)
     @ns.response(code=201, model=logged_model, description="Success")
-    @ns.response(
-        code=401,
-        model=error_model,
-        description="Invalid credentials or user is blocked",
-    )
-    # @ns.response(code=403, model=error_model, description="User is blocked")
+    @ns.response(code=401, model=error_model, description="Invalid credentials")
+    @ns.response(code=403, model=error_model, description="User is blocked")
     @ns.response(code=404, model=error_model, description="User does not exist")
     def post(self):
         """
         Logins user
         """
         res, status_code = login(request.json)
-        if status_code == 403:
-            status_code = 401  # TODO: avoid this to force session expiration in app
         return res, status_code
 
 
