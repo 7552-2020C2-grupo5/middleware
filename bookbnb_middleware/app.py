@@ -1,6 +1,5 @@
 import logging.config
 import os
-
 from decouple import config as config_decouple
 from flask import Flask, request
 from flask_cors import CORS
@@ -11,8 +10,8 @@ from bookbnb_middleware import settings
 from bookbnb_middleware.api.api import api
 from bookbnb_middleware.api.models.users_models import auth_model
 from bookbnb_middleware.constants import (
+    USER_TOKEN_VALIDATOR_URL,
     ADMIN_TOKEN_VALIDATOR_URL,
-    USER_TOKEN_VALIDATOR_URL
 )
 from bookbnb_middleware.settings import config
 
@@ -46,14 +45,9 @@ def validate_authorization():
     if request.path not in excluded_paths and request.method != "OPTIONS":
         parser_args = auth_model.parse_args()
         auth_token = parser_args.Authorization
-        h = {
-            "content-type": "application/json",
-            "Authorization": auth_token,
-            "BookBNBAuthorization": os.getenv("BOOKBNB_TOKEN", "_"),
-        }
+        h = {"content-type": "application/json", "Authorization": auth_token}
         r_user = requests.get(USER_TOKEN_VALIDATOR_URL, headers=h)
         r_admin = requests.get(ADMIN_TOKEN_VALIDATOR_URL, headers=h)
-
         if (
             r_user.status_code != 200
             and r_admin.status_code != 200
