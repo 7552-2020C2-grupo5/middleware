@@ -10,11 +10,14 @@ from bookbnb_middleware.constants import (
     NOTIFICATIONS_URL,
 )
 
+from bookbnb_middleware.utils import get_sv_auth_headers
+
 headers = {"content-type": "application/json"}
 
 
 def list_bookings(params):
-    r = requests.get(BOOKINGS_URL, params=params)
+    h = get_sv_auth_headers()
+    r = requests.get(BOOKINGS_URL, params=params, headers=h)
     return r.json(), r.status_code
 
 
@@ -48,8 +51,11 @@ def create_intent_book(payload):
         "final_date": payload["final_date"],
     }
 
+    h = get_sv_auth_headers()
+    h.update(headers)
+
     bookings_post_req = requests.post(
-        BOOKINGS_URL, data=json.dumps(booking_post_payload), headers=headers
+        BOOKINGS_URL, data=json.dumps(booking_post_payload), headers=h
     )
     if bookings_post_req.status_code != 201:
         return bookings_post_req.json(), bookings_post_req.status_code
@@ -68,14 +74,14 @@ def create_intent_book(payload):
     create_intent_book_req = requests.post(
         PAYMENTS_URL + "/bookings",
         data=json.dumps(intent_book_payload),
-        headers=headers,
+        headers=h,
     )
     if create_intent_book_req.status_code == 500:
         bookings_patch_payload = {"blockchain_status": "ERROR"}
         requests.patch(
             BOOKINGS_URL + "/" + str(booking_id),
             data=json.dumps(bookings_patch_payload),
-            headers=headers,
+            headers=h,
         )
         return create_intent_book_req.json(), 400
 
@@ -88,7 +94,7 @@ def create_intent_book(payload):
     r = requests.patch(
         BOOKINGS_URL + "/" + str(booking_id),
         data=json.dumps(bookings_patch_payload),
-        headers=headers,
+        headers=h,
     )
 
     return r.json(), r.status_code
@@ -102,7 +108,8 @@ def accept_booking(payload):
     owner_id = payload["owner_id"]
     final_date = payload["final_date"]
 
-    get_wallet_req = requests.get(USERS_URL + "/wallet/" + str(tenant_id))
+    h = get_sv_auth_headers()
+    get_wallet_req = requests.get(USERS_URL + "/wallet/" + str(tenant_id), headers=h)
     tenant_address = get_wallet_req.json()["address"]
 
     accept_booking_payload = {
@@ -123,9 +130,9 @@ def accept_booking(payload):
     if accept_req.status_code == 500:
         return accept_req.json(), 400
 
-    publication_id = requests.get(BOOKINGS_URL + "/" + str(booking_id)).json()[
-        "publication_id"
-    ]
+    publication_id = requests.get(
+        BOOKINGS_URL + "/" + str(booking_id), headers=h
+    ).json()["publication_id"]
 
     send_scheduled_notifications(publication_id, tenant_id, owner_id, final_date)
 
@@ -161,8 +168,11 @@ def send_scheduled_notifications(publication_id, tenant_id, owner_id, booking_en
         "at": booking_end_date,
     }
 
-    requests.post(url, data=json.dumps(tenant_notification_body), headers=headers)
-    requests.post(url, data=json.dumps(owner_notification_body), headers=headers)
+    h = get_sv_auth_headers()
+    h.update(headers)
+
+    requests.post(url, data=json.dumps(tenant_notification_body), headers=h)
+    requests.post(url, data=json.dumps(owner_notification_body), headers=h)
 
 
 def reject_booking(payload):
@@ -171,7 +181,8 @@ def reject_booking(payload):
     publication_owner_mnemonic = payload["publication_owner_mnemonic"]
     booking_id = payload["booking_id"]
 
-    get_wallet_req = requests.get(USERS_URL + "/wallet/" + str(tenant_id))
+    h = get_sv_auth_headers()
+    get_wallet_req = requests.get(USERS_URL + "/wallet/" + str(tenant_id), headers=h)
     tenant_address = get_wallet_req.json()["address"]
 
     reject_booking_payload = {
@@ -196,5 +207,6 @@ def reject_booking(payload):
 
 
 def get_booking_by_id(booking_id):
-    r = requests.get(BOOKINGS_URL + "/" + str(booking_id))
+    h = get_sv_auth_headers()
+    r = requests.get(BOOKINGS_URL + "/" + str(booking_id), headers=h)
     return r.json(), r.status_code
