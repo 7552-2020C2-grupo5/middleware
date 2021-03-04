@@ -55,6 +55,7 @@ class Login(Resource):
     @ns.expect(login_model)
     @ns.response(code=201, model=logged_model, description="Success")
     @ns.response(code=401, model=error_model, description="Invalid credentials")
+    @ns.response(code=403, model=error_model, description="User is blocked")
     @ns.response(code=404, model=error_model, description="User does not exist")
     def post(self):
         """
