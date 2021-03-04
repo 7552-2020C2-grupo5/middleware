@@ -38,7 +38,7 @@ def validate_authorization():
         "/bookbnb/token",
         "/bookbnb/admins/login",
         "/bookbnb/oauth/login",
-        "/bookbnb/users/login",
+        "/bookbnb/users/" "/bookbnb/users/login",
         "/bookbnb/users/reset_password",
     ]
     if request.path not in excluded_paths and request.method != "OPTIONS":
