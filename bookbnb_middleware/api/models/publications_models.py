@@ -99,6 +99,7 @@ publication_model = base_publication_model.inherit(
         "stars": fields.List(
             fields.Nested(new_star_model), description="Stars given to the publication"
         ),
+        "blocked": fields.Boolean(description="Publication is blocked"),
     },
 )
 
@@ -215,6 +216,9 @@ filter_model.add_argument(
          it will filter all publications available between\
          initial_date and final_date.",
     store_missing=True,
+)
+filter_model.add_argument(
+    "filter_blocked", type=bool, help="Filter blocked publications"
 )
 
 publication_star_uid_parser = reqparse.RequestParser()
