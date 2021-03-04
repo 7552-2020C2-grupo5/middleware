@@ -3,12 +3,14 @@ import json
 import base64
 
 from bookbnb_middleware.constants import OAUTH_URL, PAYMENTS_URL, NOTIFICATIONS_URL
+from bookbnb_middleware.utils import get_sv_auth_headers
 
 headers = {"content-type": "application/json"}
 
 
 def login(params, payload):
-    r = requests.get(OAUTH_URL + "/user", params=params)
+    h = get_sv_auth_headers()
+    r = requests.get(OAUTH_URL + "/user", params=params, headers=h)
     if r.status_code != 200:
 
         wallet_req = requests.post(PAYMENTS_URL + "/identity")
@@ -23,13 +25,15 @@ def login(params, payload):
             "wallet_address": address,
             "wallet_mnemonic": mnemonic,
         }
+
+        h.update(headers)
         register_user_req = requests.post(
-            OAUTH_URL + "/user", data=json.dumps(register_payload), headers=headers
+            OAUTH_URL + "/user", data=json.dumps(register_payload), headers=h
         )
         if register_user_req.status_code != 200:
             return register_user_req.json(), register_user_req.status_code
 
-    login_req = requests.post(OAUTH_URL + "/login", params=params)
+    login_req = requests.post(OAUTH_URL + "/login", params=params, headers=h)
     if login_req.status_code != 201:
         return login_req.json(), login_req.status_code
 
@@ -46,7 +50,7 @@ def login(params, payload):
     requests.put(
         NOTIFICATIONS_URL + "/user_token",
         data=json.dumps(push_token_payload),
-        headers=headers,
+        headers=h,
     )
 
     return login_req.json(), login_req.status_code
