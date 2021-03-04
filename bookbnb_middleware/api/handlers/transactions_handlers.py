@@ -3,13 +3,15 @@ import json
 import requests
 
 from bookbnb_middleware.constants import CRYPTOCOMPARE_URL, PAYMENTS_URL, USERS_URL
+from bookbnb_middleware.utils import get_sv_auth_headers
 
 headers = {"content-type": "application/json"}
 
 
 def get_address(user_id):
+    h = get_sv_auth_headers()
     url = USERS_URL + "/wallet/" + str(user_id)
-    r = requests.get(url)
+    r = requests.get(url, headers=h)
     return r.json(), r.status_code
 
 
