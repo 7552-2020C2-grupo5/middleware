@@ -41,7 +41,6 @@ def validate_authorization():
         "/bookbnb/users/login",
         "/bookbnb/users/reset_password",
     ]
-    log.info(request.path)
     if request.path not in excluded_paths and request.method != "OPTIONS":
         parser_args = auth_model.parse_args()
         auth_token = parser_args.Authorization
