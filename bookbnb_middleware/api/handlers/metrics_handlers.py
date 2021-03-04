@@ -6,13 +6,16 @@ from bookbnb_middleware.constants import (
     PUBLICATIONS_METRICS_URL,
 )
 
-headers = {"content-type": "application/json"}
+from bookbnb_middleware.utils import get_sv_auth_headers
 
 
 def get_all_metrics(params):
-    bookings_metrics_req = requests.get(BOOKINGS_METRICS_URL, params=params)
-    users_metrics_req = requests.get(USERS_METRICS_URL, params=params)
-    publications_metrics_req = requests.get(PUBLICATIONS_METRICS_URL, params=params)
+    h = get_sv_auth_headers()
+    bookings_metrics_req = requests.get(BOOKINGS_METRICS_URL, params=params, headers=h)
+    users_metrics_req = requests.get(USERS_METRICS_URL, params=params, headers=h)
+    publications_metrics_req = requests.get(
+        PUBLICATIONS_METRICS_URL, params=params, headers=h
+    )
     if (
         bookings_metrics_req.status_code != 200
         or bookings_metrics_req.status_code != 200
